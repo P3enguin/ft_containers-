@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/23 11:23:50 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/23 17:00:02 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,7 @@
 #include <string>
 #include <iostream>
 
-    template <class T>
-    class iter
-    {
-        
-    };
+    
 
 namespace ft {
 
@@ -29,6 +25,7 @@ namespace ft {
     class vector 
     {
         public :
+
             typedef T                                        value_type;
             typedef Allocator                                allocator_type;
             typedef typename allocator_type::reference       reference;
@@ -38,7 +35,57 @@ namespace ft {
             typedef typename allocator_type::const_pointer   const_pointer;
             typedef typename allocator_type::difference_type difference_type;
             typedef typename allocator_type::size_type       size_type;
-            typedef typename iter<value_type>                iterator;
+
+            template <typename P = value_type>
+            class iter
+            {
+                public :
+                
+                    iter () {};
+                    iter (const iter &obj) 
+                    {
+                        _iter = obj.getIter();
+                        return ;
+                    };
+                    
+                    iter &operator = (const iter &obj)
+                    {
+                        _iter = obj.getIter();
+                        return *this;
+                    };
+
+                    iter (T *vec_ptr)
+                    {
+                        _iter = vec_ptr;
+                        return ;
+                    };
+
+                    bool operator==(const iter &obj) const
+                    {
+                        if (_iter == obj.getIter())
+                            return 1;
+                        return 0;
+                    };
+
+                    bool operator!=(const iter &obj) const
+                    {
+                        if (_iter != obj.getIter())
+                            return 1;
+                        return 0;
+                    };
+
+                    T *getIter() const {return this->_iter;};
+                    const T *getConstIter const() {return this->_iter;};
+
+                private :
+                    P *_iter;
+            };           
+           
+            typedef iter<T>                      iterator;
+            typedef  iter<const T>            const_iterator;
+            iterator begin() { return (iterator(_vec_ptr + 0)) ;};
+            const_iterator begin() const {  return (iterator(_vec_ptr + 0)) ; };
+            iterator end() {return (iterator (_vec_ptr + _size - 1)); };
             
             /************************ Constructors ********************************/
 
@@ -48,7 +95,7 @@ namespace ft {
                 _size = 0;
                 _capacity = 0;
                 _max_size = 768614336404564650;
-            }
+            };
 
             explicit vector (size_type n, const value_type& val = value_type(),
                  const allocator_type& alloc = allocator_type()) : _alloc(alloc)
@@ -59,7 +106,7 @@ namespace ft {
                 _vec_ptr = _alloc.allocate(_size);
                 for (int i = 0; i < _size ; i++ )
                     _alloc.construct(_vec_ptr + i,val);
-            }
+            };
                 
             // fill and copy constructor left ;
             
