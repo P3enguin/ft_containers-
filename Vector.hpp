@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/22 15:42:40 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/23 11:23:50 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@
 #include <vector>
 #include <string>
 #include <iostream>
+
+    template <class T>
+    class iter
+    {
+        
+    };
 
 namespace ft {
 
@@ -32,6 +38,7 @@ namespace ft {
             typedef typename allocator_type::const_pointer   const_pointer;
             typedef typename allocator_type::difference_type difference_type;
             typedef typename allocator_type::size_type       size_type;
+            typedef typename iter<value_type>                iterator;
             
             /************************ Constructors ********************************/
 
@@ -56,9 +63,10 @@ namespace ft {
                 
             // fill and copy constructor left ;
             
-            /**********************************************************************/
+            /************************************************************************/
             
             /*************************** Capacity ***********************************/
+            
             size_type size() const { return _size ;};
 
             size_type max_size() const {return _max_size;};
@@ -66,6 +74,7 @@ namespace ft {
             size_type capacity() const { return _capacity;};
 
             bool empty() const { if (_size == 0) return 1 ; return 0;};
+
             void resize (size_type n, value_type val = value_type())
             {
                 if (n < _size)
@@ -94,9 +103,90 @@ namespace ft {
                     for (int i = n - _size;i < n ; i++)
                         _alloc.construct(_vec_ptr + i,val);
                 }
-            }
+            };
 
+            void reserve(size_type n)
+            {
+                if (n > _max_size)
+                    throw std::length_error("Max size Exceeded");
+                if (n > _capacity)
+                {
+                    T *tmp;
+                    int i;
+
+                    _capacity = n;
+                    tmp = _vec_ptr;
+                    _vec_ptr = _alloc.allocate(n);
+                    for (i = 0; i < _size ; i++)
+                        _alloc.construct(_vec_ptr + i,tmp[i]);
+                    for (i = 0 ; i < _size; i++)
+                        _alloc.destroy(tmp + i);
+                    _alloc.deallocate(tmp,_size);
+                }
+            };
+            /******************************************************************************/
             
+            /*************************** Element Access ***********************************/
+
+            reference operator[] (size_type n)
+            {
+                reference &tmp = _vec_ptr[n];
+                return tmp;
+            };
+
+            const_reference operator[] (size_type n) const
+            {
+                const reference &tmp = _vec_ptr[n];
+                return tmp;
+            };
+
+            reference at (size_type n)
+            {
+                if (n >= _size)
+                    throw std::out_of_range("Out of range");
+                reference &tmp = _vec_ptr[n];
+                return tmp;
+            };
+
+            const_reference at (size_type n) const
+            {
+                if (n >= _size)
+                    throw std::out_of_range("Out of range");
+                const reference &tmp = _vec_ptr[n];
+                return tmp;
+            };
+
+            // front and end should be tested !!!!!!
+
+            reference front()
+            {
+                reference &tmp = _vec_ptr[0];
+                return tmp;
+            };
+            
+            const_reference front() const
+            {
+                const reference &tmp = _vec_ptr[0];
+                return tmp;
+            };
+
+            reference back()
+            {
+                reference &tmp = _vec_ptr[_size - 1];
+                return tmp;
+            };
+
+            const_reference back() const
+            {
+                const reference &tmp = _vec_ptr[_size - 1];
+                return tmp;
+            };
+
+            /******************************************************************************/
+            
+            /*************************** Modifiers ****************************************/
+            
+
             // typedef implementation-defined                   iterator;
             // typedef implementation-defined                   const_iterator;
             // typedef std::reverse_iterator<iterator>          reverse_iterator;
