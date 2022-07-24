@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/23 17:00:02 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/24 17:07:16 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,42 +40,91 @@ namespace ft {
             class iter
             {
                 public :
-                
-                    iter () {};
-                    iter (const iter &obj) 
+    
+                    iter () { };
+                    iter (const iter<P> &obj) {_iter = obj._iter; };
+
+                    iter<P> &operator = (const iter<P> &obj){ _iter = obj._iter ; return *this ;}; //
+                   // iter<P> &operator = (T *ptr){ _iter = ptr ;return (*this); };                     // 
+
+                    bool operator ==(const iter<P> &obj) const
                     {
-                        _iter = obj.getIter();
-                        return ;
+                        if (_iter == obj.getConstIter())
+                            return true;
+                        else
+                            return false;
+                    };
+                    bool operator !=(const iter &obj) const
+                    {
+                        if (_iter != obj.getConstIter())
+                            return true;
+                        return false;
                     };
                     
-                    iter &operator = (const iter &obj)
+                    bool operator <(const iter &obj) const
                     {
-                        _iter = obj.getIter();
-                        return *this;
+                        if (_iter < obj.getConstIter())
+                            return true;
+                        return false;
+                    };   
+                    bool operator <=(const iter &obj) const
+                    {
+                        if (_iter <= obj.getConstIter())
+                            return true;
+                        return false;
+                    };   
+                    bool operator > (const iter &obj) const
+                    {
+                        if (_iter > obj.getConstIter())
+                            return true;
+                        return false;
+                    };   
+                    bool operator >=(const iter &obj) const
+                    {
+                        if (_iter >= obj.getConstIter())
+                            return true;
+                        return false;
                     };
 
-                    iter (T *vec_ptr)
-                    {
-                        _iter = vec_ptr;
-                        return ;
+                    iter<P>& operator +=(const difference_type &index) { _iter += index ;return *this; } ;
+                    iter<P>& operator -=(const difference_type &index) { _iter -= index ; return *this; } ; 
+
+                    iter<P>& operator ++(){_iter++ ;return *this;} ;
+                    iter<P>& operator --(){_iter-- ;return *this;} ;
+
+
+                    iter<P> operator ++(int){
+                        iter<P> tmp = *this;
+                        _iter++;
+                        return tmp;
+                    };
+                    iter<P> operator --(int) {
+                        iter<P> tmp = *this;
+                        _iter--;
+                        return tmp;
                     };
 
-                    bool operator==(const iter &obj) const
-                    {
-                        if (_iter == obj.getIter())
-                            return 1;
-                        return 0;
-                    };
+                    iter<P> operator +(const difference_type &index) {
+                        iter<P> ret;
 
-                    bool operator!=(const iter &obj) const
-                    {
-                        if (_iter != obj.getIter())
-                            return 1;
-                        return 0;
+                        ret._iter = _iter + index;
+                        return ret;
                     };
+                    iter<P> operator -(const difference_type &index) {
+                        iter<P> ret;
 
-                    T *getIter() const {return this->_iter;};
-                    const T *getConstIter const() {return this->_iter;};
+                        ret._iter = _iter - index;
+                        return ret;
+                    };
+                    
+                    difference_type operator -(const iter<P> &obj) { return (std::distance(this->_iter,obj.getIter())); };
+                    P & operator *() { return *_iter ;};
+                    P & operator *() const {return *_iter ;}
+                    P *operator ->() { return *_ite ;}
+
+
+                    P * getIter() const {return _iter;};
+                    const P * getConstIter () const {return _iter;};
 
                 private :
                     P *_iter;
