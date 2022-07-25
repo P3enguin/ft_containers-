@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/24 17:07:16 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/25 10:45:16 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,68 +36,71 @@ namespace ft {
             typedef typename allocator_type::difference_type difference_type;
             typedef typename allocator_type::size_type       size_type;
 
+            /**************************************************** Iterator ***************************************************/
+
             template <typename P = value_type>
             class iter
             {
                 public :
     
-                    iter () { };
+                    iter () {};
+                    iter (T * ptr) {_iter = ptr;}
                     iter (const iter<P> &obj) {_iter = obj._iter; };
 
                     iter<P> &operator = (const iter<P> &obj){ _iter = obj._iter ; return *this ;}; //
-                   // iter<P> &operator = (T *ptr){ _iter = ptr ;return (*this); };                     // 
 
                     bool operator ==(const iter<P> &obj) const
                     {
-                        if (_iter == obj.getConstIter())
+                        if (_iter == obj.getIter())
                             return true;
                         else
                             return false;
                     };
-                    bool operator !=(const iter &obj) const
+                    bool operator !=(const iter<P> &obj) const
                     {
-                        if (_iter != obj.getConstIter())
+                        if (_iter != obj.getIter())
                             return true;
                         return false;
                     };
                     
-                    bool operator <(const iter &obj) const
+                    bool operator <(const iter<P> &obj)  const
                     {
-                        if (_iter < obj.getConstIter())
+                        if (_iter < obj.getIter())
                             return true;
                         return false;
                     };   
-                    bool operator <=(const iter &obj) const
+                    bool operator <=(const iter<P> &obj) const
                     {
-                        if (_iter <= obj.getConstIter())
+                        if (_iter <= obj.getIter())
                             return true;
                         return false;
                     };   
-                    bool operator > (const iter &obj) const
+                    bool operator > (const iter<P> &obj) const
                     {
-                        if (_iter > obj.getConstIter())
+                        if (_iter > obj.getIter())
                             return true;
                         return false;
                     };   
-                    bool operator >=(const iter &obj) const
+                    bool operator >=(const iter<P> &obj) const
                     {
-                        if (_iter >= obj.getConstIter())
+                        if (_iter >= obj.getIter())
                             return true;
                         return false;
                     };
 
-                    iter<P>& operator +=(const difference_type &index) { _iter += index ;return *this; } ;
+                    iter<P>& operator +=(const difference_type &index) { _iter += index ; return *this; } ;
                     iter<P>& operator -=(const difference_type &index) { _iter -= index ; return *this; } ; 
 
-                    iter<P>& operator ++(){_iter++ ;return *this;} ;
-                    iter<P>& operator --(){_iter-- ;return *this;} ;
+                    iter<P>& operator ++() { _iter++ ; return *this;} ;
+                    iter<P>& operator --() { _iter-- ; return *this;} ;
 
 
-                    iter<P> operator ++(int){
+                    iter<P> operator ++(int) {
                         iter<P> tmp = *this;
                         _iter++;
                         return tmp;
                     };
+
                     iter<P> operator --(int) {
                         iter<P> tmp = *this;
                         _iter--;
@@ -117,26 +120,31 @@ namespace ft {
                         return ret;
                     };
                     
-                    difference_type operator -(const iter<P> &obj) { return (std::distance(this->_iter,obj.getIter())); };
-                    P & operator *() { return *_iter ;};
-                    P & operator *() const {return *_iter ;}
-                    P *operator ->() { return *_ite ;}
+                    difference_type operator -(const iter<P> &obj) { return (std::distance(obj.getIter(),this->_iter)) ;};
 
+                    P & operator *()       { return *_iter ;};
+                    P & operator *() const { return *_iter ;};
+                    P * operator ->()      { return *_iter ;};
 
                     P * getIter() const {return _iter;};
-                    const P * getConstIter () const {return _iter;};
+
 
                 private :
                     P *_iter;
-            };           
+            };      
            
-            typedef iter<T>                      iterator;
-            typedef  iter<const T>            const_iterator;
-            iterator begin() { return (iterator(_vec_ptr + 0)) ;};
-            const_iterator begin() const {  return (iterator(_vec_ptr + 0)) ; };
-            iterator end() {return (iterator (_vec_ptr + _size - 1)); };
+            typedef iter <T>                        iterator;
+            typedef iter <const T>            const_iterator;
+
+            iterator       begin()        { return iterator      (&_vec_ptr[0])     ;};
+            const_iterator begin()  const { return const_iterator(&_vec_ptr[0])     ;};
+
+            iterator         end()        { return iterator      (&_vec_ptr[_size]) ;};
+            const_iterator   end()  const { return const_iterator(&_vec_ptr[_size]) ;};
             
-            /************************ Constructors ********************************/
+            /*****************************************************************************************************************/
+            
+            /************************************************* Constructors **************************************************/
 
             explicit vector (const allocator_type & alloc = allocator_type())
             {
@@ -159,9 +167,9 @@ namespace ft {
                 
             // fill and copy constructor left ;
             
-            /************************************************************************/
+            /*****************************************************************************************************************/
             
-            /*************************** Capacity ***********************************/
+            /**************************************************** Capacity ***************************************************/
             
             size_type size() const { return _size ;};
 
@@ -175,8 +183,8 @@ namespace ft {
             {
                 if (n < _size)
                 {
-                    for (int i = n ; i < _capacity ;i++ )
-                        _alloc.destroy(_vec_ptr + i);
+                    // for (int i = n ; i < _capacity ;i++ )
+                    //     _alloc.destroy(_vec_ptr + i);
                     _size = n;
                 }
                 else if (n > _size && n > _capacity)
@@ -192,7 +200,7 @@ namespace ft {
                          _alloc.destroy(tmp + i);
                     _alloc.deallocate(tmp,_size);
                     _size = n;
-                    _capacity = n;    
+                    _capacity = n;
                 }
                 else if ( n > _size && n < _capacity)
                 {
@@ -220,9 +228,10 @@ namespace ft {
                     _alloc.deallocate(tmp,_size);
                 }
             };
-            /******************************************************************************/
+
+            /*****************************************************************************************************************/
             
-            /*************************** Element Access ***********************************/
+            /************************************************ Element Access *************************************************/
 
             reference operator[] (size_type n)
             {
@@ -278,15 +287,11 @@ namespace ft {
                 return tmp;
             };
 
-            /******************************************************************************/
+            /*****************************************************************************************************************/
             
-            /*************************** Modifiers ****************************************/
+            /*************************************************** Modifiers ***************************************************/
             
 
-            // typedef implementation-defined                   iterator;
-            // typedef implementation-defined                   const_iterator;
-            // typedef std::reverse_iterator<iterator>          reverse_iterator;
-            // typedef std::reverse_iterator<const_iterator>    const_reverse_iterator;
         
         private :
             T *_vec_ptr;
