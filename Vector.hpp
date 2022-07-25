@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/25 10:45:16 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/25 17:02:48 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,11 +160,11 @@ namespace ft {
                 _size = n;
                 _capacity = n;
                 _max_size = 768614336404564650;
-                _vec_ptr = _alloc.allocate(_size);
+                _vec_ptr = _alloc.allocate(_capacity);
                 for (int i = 0; i < _size ; i++ )
                     _alloc.construct(_vec_ptr + i,val);
             };
-                
+
             // fill and copy constructor left ;
             
             /*****************************************************************************************************************/
@@ -183,13 +183,13 @@ namespace ft {
             {
                 if (n < _size)
                 {
-                    // for (int i = n ; i < _capacity ;i++ )
-                    //     _alloc.destroy(_vec_ptr + i);
+                    for (int i = n ; i < _capacity ;i++ )
+                        _alloc.destroy(_vec_ptr + i);
                     _size = n;
                 }
                 else if (n > _size && n > _capacity)
                 {   
-                    int i = 0;
+                    size_type i = 0;
                     T *tmp = _vec_ptr;
                     _vec_ptr = _alloc.allocate(n);
                     for (i = 0;i < _size ; i++)
@@ -216,7 +216,7 @@ namespace ft {
                 if (n > _capacity)
                 {
                     T *tmp;
-                    int i;
+                    size_type i;
 
                     _capacity = n;
                     tmp = _vec_ptr;
@@ -233,26 +233,16 @@ namespace ft {
             
             /************************************************ Element Access *************************************************/
 
-            reference operator[] (size_type n)
-            {
-                reference &tmp = _vec_ptr[n];
-                return tmp;
-            };
+            reference       operator[] (size_type n)        {       reference &tmp = _vec_ptr[n]; return tmp; };
+            const_reference operator[] (size_type n) const  { const reference &tmp = _vec_ptr[n]; return tmp; };
 
-            const_reference operator[] (size_type n) const
-            {
-                const reference &tmp = _vec_ptr[n];
-                return tmp;
-            };
-
-            reference at (size_type n)
+            reference       at (size_type n)
             {
                 if (n >= _size)
                     throw std::out_of_range("Out of range");
                 reference &tmp = _vec_ptr[n];
                 return tmp;
             };
-
             const_reference at (size_type n) const
             {
                 if (n >= _size)
@@ -263,36 +253,155 @@ namespace ft {
 
             // front and end should be tested !!!!!!
 
-            reference front()
-            {
-                reference &tmp = _vec_ptr[0];
-                return tmp;
-            };
-            
-            const_reference front() const
-            {
-                const reference &tmp = _vec_ptr[0];
-                return tmp;
-            };
+            reference       front()         {       reference &tmp = _vec_ptr[0]; return tmp; };
+            const_reference front() const   { const reference &tmp = _vec_ptr[0]; return tmp; };
 
-            reference back()
-            {
-                reference &tmp = _vec_ptr[_size - 1];
-                return tmp;
-            };
-
-            const_reference back() const
-            {
-                const reference &tmp = _vec_ptr[_size - 1];
-                return tmp;
-            };
+            reference        back()         {       reference &tmp = _vec_ptr[_size - 1]; return tmp; };
+            const_reference  back() const   { const reference &tmp = _vec_ptr[_size - 1]; return tmp; };
 
             /*****************************************************************************************************************/
             
             /*************************************************** Modifiers ***************************************************/
             
+            template <class InputIterator>
+            void assign (InputIterator first, InputIterator last)
+            {
+                difference_type diff;
+                
+                //try diff in size_type;
+                diff = last - first;
+                if (diff > _capacity)
+                {
+                    for (size_type i = 0; i < _capacity; i++)
+                        _alloc.destroy(_vec_ptr + i);
+                    _alloc.deallocate(_vec_ptr,_capacity);
+                    _capacity = diff;
+                   _vec_ptr = _alloc.allocate(_capacity);
+                }
+                if (diff <= _capacity)
+                {
+                    _size = diff;
+                    for (size_type i = 0; i < _capacity; i++)
+                            _alloc.destroy(_vec_ptr + i);
+                }
+                for (difference_type i = 0; i < diff; i++)
+                    _alloc.construct(_vec_ptr + i, *(first + i));
+            };
+            void assign (size_type n, const value_type& val)
+            {
+                if (n > _capacity)
+                {
+                    for (size_type i = 0; i < _capacity; i++)
+                        _alloc.destroy(_vec_ptr + i);
+                    _alloc.deallocate(_vec_ptr,_capacity);
+                    _capacity = n;
+                   _vec_ptr = _alloc.allocate(_capacity);
+                }
+                if (n <= _capacity)
+                {
+                   _size = n;
+                    for (size_type i = 0; i < _capacity; i++)
+                            _alloc.destroy(_vec_ptr + i);
+                }
+                for (size_type i = 0; i < n; i++)
+                    _alloc.construct(_vec_ptr + i, val);
+            };
 
-        
+            void push_back (const value_type& val)
+            {
+                if (_size == _capacity)
+                {
+                    for (size_type i = 0; i < _capacity; i++)
+                        _alloc.destroy(_vec_ptr + i);
+                    _alloc.deallocate(_vec_ptr,_capacity);
+                    _capacity = _capacity * 2;
+                    _vec_ptr = _alloc.allocate(_capacity);
+                } 
+                _alloc.construct(_vec_ptr + _size, val);
+                _size++;
+            };
+
+            void pop_back()
+            {
+                _size--;
+                _alloc.destroy(_vec_ptr + _size);
+            };
+
+            iterator insert (iterator position, const value_type& val)
+            {
+                size_type i = 0;
+                T* tmp  = _vec_ptr;
+                difference_type diff;
+
+                diff = (_vec_ptr + _size - 1) - position;
+                if (_size + 1 > _capacity)
+                    _vec_ptr = _alloc.allocate(_capacity * 2);
+                for (i = 0;i < diff ; i++)
+                    _alloc.construct(_vec_ptr + i ,tmp[i]);
+                _alloc.construct(_vec_ptr + i ,val);
+                for (i ;i < _size ; i++)
+                    _alloc.construct(_vec_ptr + i + 1 , tmp[i]);
+                if (_size + 1  > _capacity)
+                {
+                    for (i = 0; i < _size ; i++ )
+                         _alloc.destroy(tmp + i);
+                    _alloc.deallocate(tmp,_size);
+                    _capacity = _capacity * 2;
+                }
+                _size++;
+            };
+            
+            void insert (iterator position, size_type n, const value_type& val)
+            {
+                size_type i = 0;
+                size_type j = 0;
+                T* tmp  = _vec_ptr;
+                difference_type diff;
+
+                diff = (_vec_ptr + _size - 1) - position;
+                if (_size + n + 1 > _capacity)
+                    _vec_ptr = _alloc.allocate(_capacity * 2);
+                for (i = 0;i < diff ; i++)
+                    _alloc.construct(_vec_ptr + i ,tmp[i]);
+                for (j ; j < n ; j++)
+                    _alloc.construct(_vec_ptr + i + j ,val);
+                for (i ;i < _size ; i++)
+                    _alloc.construct(_vec_ptr + i + j +1 , tmp[i]);
+                if (_size + n + 1  > _capacity)
+                {
+                    for (i = 0; i < _size ; i++ )
+                         _alloc.destroy(tmp + i);
+                    _alloc.deallocate(tmp,_size);
+                    _capacity = _capacity * 2;
+                }
+                _size += n;
+            };
+            template <class InputIterator>
+            void insert (iterator position, InputIterator first, InputIterator last)
+            {
+                difference_type diff;
+                difference_type n;
+                
+                n = last - first;
+                diff = (_vec_ptr + _size - 1) - position;
+                if (_size + diff + 1 > _capacity)
+                    _vec_ptr = _alloc.allocate(_capacity * 2);
+                for (i = 0;i < diff ; i++)
+                    _alloc.construct(_vec_ptr + i ,tmp[i]);
+                for (j ; j < n ; j++)
+                    _alloc.construct(_vec_ptr + i + j , *(first + i));
+                for (i ;i < _size ; i++)
+                    _alloc.construct(_vec_ptr + i + j + 1 , tmp[i]);
+                if (_size + n + 1  > _capacity)
+                {
+                    for (i = 0; i < _size ; i++ )
+                         _alloc.destroy(tmp + i);
+                    _alloc.deallocate(tmp,_size);
+                    _capacity = _capacity * 2;
+                }
+                _size += n;
+            };
+
         private :
             T *_vec_ptr;
             allocator_type _alloc;
