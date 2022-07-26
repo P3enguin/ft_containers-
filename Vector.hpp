@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/25 17:02:48 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/26 11:00:13 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +263,28 @@ namespace ft {
             
             /*************************************************** Modifiers ***************************************************/
             
+            void assign (size_type n, const value_type& val)
+            {
+                if (n > _capacity)
+                {
+                    for (size_type i = 0; i < _capacity; i++)
+                        _alloc.destroy(_vec_ptr + i);
+                    _alloc.deallocate(_vec_ptr,_capacity);
+                    _capacity = n;
+                   _vec_ptr = _alloc.allocate(_capacity);
+                }
+                if (n <= _capacity)
+                {
+                   _size = n;
+                    for (size_type i = 0; i < _capacity; i++)
+                            _alloc.destroy(_vec_ptr + i);
+                }
+                for (size_type i = 0; i < n; i++)
+                    _alloc.construct(_vec_ptr + i, val);
+            };
+
             template <class InputIterator>
+            
             void assign (InputIterator first, InputIterator last)
             {
                 difference_type diff;
@@ -285,38 +306,31 @@ namespace ft {
                             _alloc.destroy(_vec_ptr + i);
                 }
                 for (difference_type i = 0; i < diff; i++)
-                    _alloc.construct(_vec_ptr + i, *(first + i));
-            };
-            void assign (size_type n, const value_type& val)
-            {
-                if (n > _capacity)
                 {
-                    for (size_type i = 0; i < _capacity; i++)
-                        _alloc.destroy(_vec_ptr + i);
-                    _alloc.deallocate(_vec_ptr,_capacity);
-                    _capacity = n;
-                   _vec_ptr = _alloc.allocate(_capacity);
+                    _alloc.construct(_vec_ptr + i, *first);
+                    first++;
                 }
-                if (n <= _capacity)
-                {
-                   _size = n;
-                    for (size_type i = 0; i < _capacity; i++)
-                            _alloc.destroy(_vec_ptr + i);
-                }
-                for (size_type i = 0; i < n; i++)
-                    _alloc.construct(_vec_ptr + i, val);
             };
+            
+            
 
             void push_back (const value_type& val)
             {
+                T* tmp  = _vec_ptr;
+
                 if (_size == _capacity)
                 {
-                    for (size_type i = 0; i < _capacity; i++)
-                        _alloc.destroy(_vec_ptr + i);
-                    _alloc.deallocate(_vec_ptr,_capacity);
-                    _capacity = _capacity * 2;
+                    if (_capacity == 0)
+                        _capacity += 1;
+                    else
+                        _capacity = _capacity * 2;
                     _vec_ptr = _alloc.allocate(_capacity);
-                } 
+                    for (size_type i = 0; i < _size; i++)
+                        _alloc.construct(_vec_ptr + i,tmp[i]);
+                    for (size_type i = 0; i < _size; i++)
+                        _alloc.destroy(tmp + i);
+                    _alloc.deallocate(tmp,_size);
+                };
                 _alloc.construct(_vec_ptr + _size, val);
                 _size++;
             };
@@ -381,6 +395,9 @@ namespace ft {
             {
                 difference_type diff;
                 difference_type n;
+                size_type i = 0;
+                size_type j = 0;
+                T* tmp  = _vec_ptr;
                 
                 n = last - first;
                 diff = (_vec_ptr + _size - 1) - position;
