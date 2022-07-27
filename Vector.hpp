@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/26 11:00:13 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/27 18:21:55 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "tool.hpp"
 
     
 
@@ -283,8 +284,7 @@ namespace ft {
                     _alloc.construct(_vec_ptr + i, val);
             };
 
-            template <class InputIterator>
-            
+           template <class InputIterator, typename enable_if< !is_integral<InputIterator>::value ,InputIterator>::type >
             void assign (InputIterator first, InputIterator last)
             {
                 difference_type diff;
