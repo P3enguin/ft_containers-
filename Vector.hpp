@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/27 18:21:55 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/28 16:49:44 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,8 +284,8 @@ namespace ft {
                     _alloc.construct(_vec_ptr + i, val);
             };
 
-           template <class InputIterator, typename enable_if< !is_integral<InputIterator>::value ,InputIterator>::type >
-            void assign (InputIterator first, InputIterator last)
+            template <class InputIterator >
+            void assign (typename enable_if< !is_integral<InputIterator>::value ,InputIterator>::type  first, InputIterator last)
             {
                 difference_type diff;
                 
@@ -302,7 +302,7 @@ namespace ft {
                 if (diff <= _capacity)
                 {
                     _size = diff;
-                    for (size_type i = 0; i < _capacity; i++)
+                    for (size_type i = 0 ;i < _capacity; i++)
                             _alloc.destroy(_vec_ptr + i);
                 }
                 for (difference_type i = 0; i < diff; i++)
@@ -343,26 +343,31 @@ namespace ft {
 
             iterator insert (iterator position, const value_type& val)
             {
-                size_type i = 0;
+                size_type i;
                 T* tmp  = _vec_ptr;
                 difference_type diff;
 
-                diff = (_vec_ptr + _size - 1) - position;
+                diff = position.getIter() - _vec_ptr ;
                 if (_size + 1 > _capacity)
                     _vec_ptr = _alloc.allocate(_capacity * 2);
                 for (i = 0;i < diff ; i++)
                     _alloc.construct(_vec_ptr + i ,tmp[i]);
                 _alloc.construct(_vec_ptr + i ,val);
-                for (i ;i < _size ; i++)
+                while (i < _size)
+                {
                     _alloc.construct(_vec_ptr + i + 1 , tmp[i]);
+                    i++;
+                };
                 if (_size + 1  > _capacity)
                 {
                     for (i = 0; i < _size ; i++ )
                          _alloc.destroy(tmp + i);
                     _alloc.deallocate(tmp,_size);
                     _capacity = _capacity * 2;
-                }
+                };
                 _size++;
+                position = _vec_ptr + diff;
+                return position;
             };
             
             void insert (iterator position, size_type n, const value_type& val)
@@ -371,50 +376,79 @@ namespace ft {
                 size_type j = 0;
                 T* tmp  = _vec_ptr;
                 difference_type diff;
+                size_type alloc_nbr;
 
-                diff = (_vec_ptr + _size - 1) - position;
+                diff = position.getIter() - _vec_ptr ;
                 if (_size + n + 1 > _capacity)
-                    _vec_ptr = _alloc.allocate(_capacity * 2);
-                for (i = 0;i < diff ; i++)
+                {
+                    if (_size + n + 1 <= _capacity * 2)
+                        alloc_nbr = _capacity * 2;
+                    else
+                        alloc_nbr = _size + n;
+                    _vec_ptr = _alloc.allocate(alloc_nbr);
+                }
+                for (i = 0; i < diff ; i++)
                     _alloc.construct(_vec_ptr + i ,tmp[i]);
-                for (j ; j < n ; j++)
+                while (j < n)
+                {
                     _alloc.construct(_vec_ptr + i + j ,val);
-                for (i ;i < _size ; i++)
+                    j++;
+                };
+                while (i < _size )
+                {
                     _alloc.construct(_vec_ptr + i + j +1 , tmp[i]);
+                    i++;
+                };
                 if (_size + n + 1  > _capacity)
                 {
                     for (i = 0; i < _size ; i++ )
                          _alloc.destroy(tmp + i);
                     _alloc.deallocate(tmp,_size);
-                    _capacity = _capacity * 2;
-                }
+                    _capacity = alloc_nbr;
+                };
                 _size += n;
             };
+            
             template <class InputIterator>
-            void insert (iterator position, InputIterator first, InputIterator last)
+            void insert (iterator position, typename enable_if<!is_integral<InputIterator>::value,InputIterator>::type first, InputIterator last)
             {
                 difference_type diff;
                 difference_type n;
-                size_type i = 0;
-                size_type j = 0;
+                size_type i ;
+                size_type j;
+                size_type alloc_nbr;
                 T* tmp  = _vec_ptr;
                 
                 n = last - first;
-                diff = (_vec_ptr + _size - 1) - position;
-                if (_size + diff + 1 > _capacity)
-                    _vec_ptr = _alloc.allocate(_capacity * 2);
+                diff =  position  - _vec_ptr;
+                if (_size + n + 1 > _capacity)
+                {
+                    if (_size + n + 1 <= _capacity * 2)
+                        alloc_nbr = _capacity * 2;
+                    else
+                        alloc_nbr = _size + n;
+                    _vec_ptr = _alloc.allocate(alloc_nbr);
+                }
+
                 for (i = 0;i < diff ; i++)
                     _alloc.construct(_vec_ptr + i ,tmp[i]);
-                for (j ; j < n ; j++)
-                    _alloc.construct(_vec_ptr + i + j , *(first + i));
-                for (i ;i < _size ; i++)
+                for (j = 0 ; j < n ; j++)
+                {
+                    _alloc.construct(_vec_ptr + i + j , *first);
+                    first++;
+                };
+                j--;
+                while (i < _size )
+                {
                     _alloc.construct(_vec_ptr + i + j + 1 , tmp[i]);
+                    i++;
+                }
                 if (_size + n + 1  > _capacity)
                 {
                     for (i = 0; i < _size ; i++ )
                          _alloc.destroy(tmp + i);
                     _alloc.deallocate(tmp,_size);
-                    _capacity = _capacity * 2;
+                    _capacity = alloc_nbr;
                 }
                 _size += n;
             };

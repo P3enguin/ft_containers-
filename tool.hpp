@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:38:02 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/27 17:49:52 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/28 14:35:55 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ struct is_integral<unsigned long long int>
 
 /********************* enable_if ********************************/
 
-template<bool B, typename T>
+template<bool B, typename T >
 struct enable_if { };
 
 template<typename T>
