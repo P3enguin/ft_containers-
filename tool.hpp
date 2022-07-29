@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:38:02 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/28 14:35:55 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/29 12:11:26 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@
 #include <typeinfo>
 
 /********************* is_integral ********************************/
+
+
+/* is_integral Implemented using the template specialization technique. for info : https://www.cprogramming.com/tutorial/template_specialization.html */
+
+
+
 template<typename T >
 struct is_integral
 {  
@@ -24,8 +30,8 @@ struct is_integral
 
 template<>
 struct is_integral<bool>
-{  typedef bool hh;
-    static const hh value = true;
+{
+    static const bool value = true;
 };
 
 template<>
@@ -126,34 +132,3 @@ struct enable_if<true, T> { typedef T type; };
 
 
 /***************************************************************/
-// template<typename T>
-// struct const_integral {
-
-//         static bool _vall ;
-//         const_integral() 
-//         {
-            
-//             if (typeid(T) == typeid(int) 
-//                 || typeid(T) == typeid(bool)
-//                 || typeid(T) == typeid(char)
-//                 || typeid(T) == typeid(char16_t)
-//                 || typeid(T) == typeid(char32_t)
-//                 || typeid(T) == typeid(wchar_t)
-//                 || typeid(T) == typeid(signed char)
-//                 || typeid(T) == typeid(short int)
-//                 || typeid(T) == typeid(long int)
-//                 || typeid(T) == typeid(long long int)
-//                 || typeid(T) == typeid(unsigned char)
-//                 || typeid(T) == typeid(unsigned short int)
-//                 || typeid(T) == typeid(unsigned int)
-//                 || typeid(T) == typeid(unsigned long int)
-//                 || typeid(T) == typeid(unsigned long long int))
-//             {
-//                 _vall = true;      
-//             }
-//             else
-//                 _vall = false;
-//         }; 
-//        bool getvall() { return _vall; };
-            
-// };

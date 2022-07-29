@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/28 16:49:44 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/29 14:56:50 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <iostream>
 #include "tool.hpp"
 
-    
+// check if Deallocate done by capacity
 
 namespace ft {
 
@@ -453,6 +453,58 @@ namespace ft {
                 _size += n;
             };
 
+            iterator erase (iterator position)
+            {
+                size_type i;
+                difference_type n;
+                T *tmp = _vec_ptr;
+
+                n = position - _vec_ptr;
+                _vec_ptr = _alloc.allocate(_capacity);
+                for (i = 0; i < n ; i++)
+                    _alloc.construct(_vec_ptr + i,tmp[i]);
+                i++;
+                while (i < _size)
+                {
+                    _alloc.construct(_vec_ptr + i - 1,tmp[i]);
+                    i++;
+                };
+                for (i = 0; i < _size; i ++)
+                    _alloc.destroy(tmp + i);
+                _alloc.deallocate(tmp,_capacity);
+                _size -= 1;
+                position = _vec_ptr + n;
+                return position;
+            };
+
+            iterator erase (iterator first, iterator last)
+            {
+                size_type range;
+                difference_type n;
+                size_type i;
+                iterator position;
+                T *tmp = _vec_ptr;
+                
+                n = first - _vec_ptr;
+                range = last - first;
+                _vec_ptr = _alloc.allocate(_capacity);
+                for (i = 0 ; i < n ; i++)
+                    _alloc.construct(_vec_ptr + i,tmp[i]);
+                while (i < range + n)
+                    i++;
+                while (i < _size)
+                {
+                    _alloc.construct(_vec_ptr + i - range,tmp[i]);
+                    i++;
+                };
+                for (i = 0 ; i < _size ; i++)
+                    _alloc.destroy(tmp + i);
+                _alloc.deallocate(tmp,_capacity);
+                position = _vec_ptr + n;
+                _size  -= range;
+                return position;
+            };
+            
         private :
             T *_vec_ptr;
             allocator_type _alloc;
