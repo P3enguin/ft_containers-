@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:38:02 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/29 12:11:26 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/29 16:32:21 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,48 @@
 #include <string>
 #include <typeinfo>
 
-/********************* is_integral ********************************/
+/***************************** iterator_traits **********************************/
 
 
-/* is_integral Implemented using the template specialization technique. for info : https://www.cprogramming.com/tutorial/template_specialization.html */
+template <class Iterator> 
+class iterator_traits
+{
+    public :
+        typedef typename Iterator::iterator_category iterator_category;
+        typedef typename Iterator::value_type        value_type;
+        typedef typename Iterator::difference_type   difference_type;
+        typedef typename Iterator::pointer           pointer;
+        typedef typename Iterator::reference         reference;
+};
+
+template <class T> 
+class iterator_traits<T*>
+{
+    public :
+        typedef std::random_access_iterator_tag iterator_category;
+        typedef T                          value_type;
+        typedef ptrdiff_t                  difference_type;
+        typedef T*                         pointer;
+        typedef T&                         reference;
+};
+
+template <class T>
+class iterator_traits<const T*>
+{
+    public :
+        typedef std::random_access_iterator_tag iterator_category;
+        typedef T                          value_type;
+        typedef ptrdiff_t                  difference_type;
+        typedef const T*                   const_pointer;
+        typedef const T&                   const_reference;
+};
 
 
+
+/***************************** is_integral **********************************/
+
+/*  is_integral Implemented using the template specialization technique. 
+for info : https://www.cprogramming.com/tutorial/template_specialization.html */
 
 template<typename T >
 struct is_integral

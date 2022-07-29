@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/29 14:56:50 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/29 17:52:55 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ namespace ft {
             class iter
             {
                 public :
-    
+                    
+                    typedef typename std::random_access_iterator_tag iterator_category; 
+
                     iter () {};
                     iter (T * ptr) {_iter = ptr;}
                     iter (const iter<P> &obj) {_iter = obj._iter; };
@@ -504,7 +506,44 @@ namespace ft {
                 _size  -= range;
                 return position;
             };
-            
+
+            void swap (vector& x)
+            {
+                T *tmp = _vec_ptr;
+                T *tmp2 = x._vec_ptr;
+                size_type tmp_size = _size;
+                size_type tmp_capacity = _capacity;
+                size_type i;
+
+
+                _size = x.size();
+                _capacity = x.capacity();
+                _vec_ptr = _alloc.allocate(_capacity);
+                for (i = 0 ; i < _size ; i++)
+                    _alloc.construct(_vec_ptr + i,x[i]);
+                
+                x._size = tmp_size;
+                x._capacity = tmp_capacity;
+                x._vec_ptr = _alloc.allocate(tmp_capacity);
+                for (i = 0 ; i < tmp_size ; i++)
+                    _alloc.construct(x._vec_ptr + i,tmp[i]);
+                
+                for (i = 0 ; i < _size ; i++)
+                    _alloc.destroy(tmp2 + i);
+                for (i = 0 ; i < tmp_size ; i++)
+                    _alloc.destroy(tmp + i);
+                _alloc.deallocate(tmp,tmp_capacity);
+                _alloc.deallocate(tmp2,_capacity);
+            };
+
+            void clear()
+            {
+                size_type i;
+                for (i = _size - 1 ; i > _size; i--)
+                    _alloc.destroy(_vec_ptr + i);
+                _size = 0;
+            }
+
         private :
             T *_vec_ptr;
             allocator_type _alloc;
