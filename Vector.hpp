@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/30 16:26:08 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/30 16:37:11 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,11 @@ namespace ft {
             iterator         end()        { return iterator      (&_vec_ptr[_size]) ;};
             const_iterator   end()  const { return const_iterator(&_vec_ptr[_size]) ;};
 
-            reverse_iterator rbegin ()       { return reverse_iterator(this->end()); }
-            const_reverse_iterator rbegin()  const{ return const_reverse_iterator(this->end());}
+            reverse_iterator rbegin ()       { return reverse_iterator(this->end() - 1); }
+            const_reverse_iterator rbegin()  const{ return const_reverse_iterator(this->end() - 1);}
 
-            reverse_iterator rend ()       { return reverse_iterator (this->begin()); }
-            const_reverse_iterator rend() const{ return const_reverse_iterator (this->begin());}
+            reverse_iterator rend ()       { return reverse_iterator (this->begin() - 1); }
+            const_reverse_iterator rend() const{ return const_reverse_iterator (this->begin() - 1);}
             /*****************************************************************************************************************/
             
             /************************************************* Constructors **************************************************/
