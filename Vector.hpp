@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/29 17:52:55 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/30 16:26:08 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,117 +38,30 @@ namespace ft {
             typedef typename allocator_type::size_type       size_type;
 
             /**************************************************** Iterator ***************************************************/
-
-            template <typename P = value_type>
-            class iter
-            {
-                public :
-                    
-                    typedef typename std::random_access_iterator_tag iterator_category; 
-
-                    iter () {};
-                    iter (T * ptr) {_iter = ptr;}
-                    iter (const iter<P> &obj) {_iter = obj._iter; };
-
-                    iter<P> &operator = (const iter<P> &obj){ _iter = obj._iter ; return *this ;}; //
-
-                    bool operator ==(const iter<P> &obj) const
-                    {
-                        if (_iter == obj.getIter())
-                            return true;
-                        else
-                            return false;
-                    };
-                    bool operator !=(const iter<P> &obj) const
-                    {
-                        if (_iter != obj.getIter())
-                            return true;
-                        return false;
-                    };
-                    
-                    bool operator <(const iter<P> &obj)  const
-                    {
-                        if (_iter < obj.getIter())
-                            return true;
-                        return false;
-                    };   
-                    bool operator <=(const iter<P> &obj) const
-                    {
-                        if (_iter <= obj.getIter())
-                            return true;
-                        return false;
-                    };   
-                    bool operator > (const iter<P> &obj) const
-                    {
-                        if (_iter > obj.getIter())
-                            return true;
-                        return false;
-                    };   
-                    bool operator >=(const iter<P> &obj) const
-                    {
-                        if (_iter >= obj.getIter())
-                            return true;
-                        return false;
-                    };
-
-                    iter<P>& operator +=(const difference_type &index) { _iter += index ; return *this; } ;
-                    iter<P>& operator -=(const difference_type &index) { _iter -= index ; return *this; } ; 
-
-                    iter<P>& operator ++() { _iter++ ; return *this;} ;
-                    iter<P>& operator --() { _iter-- ; return *this;} ;
-
-
-                    iter<P> operator ++(int) {
-                        iter<P> tmp = *this;
-                        _iter++;
-                        return tmp;
-                    };
-
-                    iter<P> operator --(int) {
-                        iter<P> tmp = *this;
-                        _iter--;
-                        return tmp;
-                    };
-
-                    iter<P> operator +(const difference_type &index) {
-                        iter<P> ret;
-
-                        ret._iter = _iter + index;
-                        return ret;
-                    };
-                    iter<P> operator -(const difference_type &index) {
-                        iter<P> ret;
-
-                        ret._iter = _iter - index;
-                        return ret;
-                    };
-                    
-                    difference_type operator -(const iter<P> &obj) { return (std::distance(obj.getIter(),this->_iter)) ;};
-
-                    P & operator *()       { return *_iter ;};
-                    P & operator *() const { return *_iter ;};
-                    P * operator ->()      { return *_iter ;};
-
-                    P * getIter() const {return _iter;};
-
-
-                private :
-                    P *_iter;
-            };      
+     
            
             typedef iter <T>                        iterator;
             typedef iter <const T>            const_iterator;
+
+            typedef reverse_iter<iterator>           reverse_iterator;
+            typedef reverse_iter<const_iterator>     const_reverse_iterator;
+
 
             iterator       begin()        { return iterator      (&_vec_ptr[0])     ;};
             const_iterator begin()  const { return const_iterator(&_vec_ptr[0])     ;};
 
             iterator         end()        { return iterator      (&_vec_ptr[_size]) ;};
             const_iterator   end()  const { return const_iterator(&_vec_ptr[_size]) ;};
-            
+
+            reverse_iterator rbegin ()       { return reverse_iterator(this->end()); }
+            const_reverse_iterator rbegin()  const{ return const_reverse_iterator(this->end());}
+
+            reverse_iterator rend ()       { return reverse_iterator (this->begin()); }
+            const_reverse_iterator rend() const{ return const_reverse_iterator (this->begin());}
             /*****************************************************************************************************************/
             
             /************************************************* Constructors **************************************************/
-
+            
             explicit vector (const allocator_type & alloc = allocator_type())
             {
                 _vec_ptr = nullptr;
