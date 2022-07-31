@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/30 16:37:11 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/07/31 11:53:19 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ namespace ft {
             typedef iter <T>                        iterator;
             typedef iter <const T>            const_iterator;
 
-            typedef reverse_iter<iterator>           reverse_iterator;
-            typedef reverse_iter<const_iterator>     const_reverse_iterator;
+            typedef typename ft::reverse_iterator<iterator>           reverse_iterator;
+            typedef typename ft::reverse_iterator<const_iterator>     const_reverse_iterator;
 
 
             iterator       begin()        { return iterator      (&_vec_ptr[0])     ;};
@@ -466,6 +466,6 @@ namespace ft {
 
     };
 
-}
+};
 
 #endif
