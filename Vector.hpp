@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/31 11:53:19 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/08/01 15:21:22 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,14 @@ namespace ft {
             typedef typename allocator_type::difference_type difference_type;
             typedef typename allocator_type::size_type       size_type;
 
-            /**************************************************** Iterator ***************************************************/
+            /**************************** Iterator ***************************/
      
            
             typedef iter <T>                        iterator;
             typedef iter <const T>            const_iterator;
 
-            typedef typename ft::reverse_iterator<iterator>           reverse_iterator;
-            typedef typename ft::reverse_iterator<const_iterator>     const_reverse_iterator;
+            typedef typename ft::reverse_iterator<iterator>       reverse_iterator;
+            typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 
             iterator       begin()        { return iterator      (&_vec_ptr[0])     ;};
@@ -53,14 +53,23 @@ namespace ft {
             iterator         end()        { return iterator      (&_vec_ptr[_size]) ;};
             const_iterator   end()  const { return const_iterator(&_vec_ptr[_size]) ;};
 
-            reverse_iterator rbegin ()       { return reverse_iterator(this->end() - 1); }
-            const_reverse_iterator rbegin()  const{ return const_reverse_iterator(this->end() - 1);}
 
-            reverse_iterator rend ()       { return reverse_iterator (this->begin() - 1); }
-            const_reverse_iterator rend() const{ return const_reverse_iterator (this->begin() - 1);}
-            /*****************************************************************************************************************/
+            reverse_iterator  rbegin ()       
+                                { return reverse_iterator  (this->end() - 1);};
+            reverse_iterator    rend ()            
+                                { return reverse_iterator (this->begin() - 1);};
+
+
+            const_reverse_iterator  rbegin()  
+                        const { return const_reverse_iterator (this->end() - 1);};
             
-            /************************************************* Constructors **************************************************/
+            const_reverse_iterator   rend() 
+                        const {return const_reverse_iterator (this->begin() - 1);}
+
+            
+            /*****************************************************************/
+            
+            /************************* Constructors **************************/
             
             explicit vector (const allocator_type & alloc = allocator_type())
             {
@@ -71,21 +80,65 @@ namespace ft {
             };
 
             explicit vector (size_type n, const value_type& val = value_type(),
-                 const allocator_type& alloc = allocator_type()) : _alloc(alloc)
+                const allocator_type& alloc = allocator_type()) : _alloc(alloc)
             {
                 _size = n;
                 _capacity = n;
                 _max_size = 768614336404564650;
                 _vec_ptr = _alloc.allocate(_capacity);
-                for (int i = 0; i < _size ; i++ )
+                for (size_type i = 0; i < _size ; i++ )
                     _alloc.construct(_vec_ptr + i,val);
             };
 
-            // fill and copy constructor left ;
+            template <class InputIterator>
+            vector (typename enable_if<!is_integral<InputIterator>::value,InputIterator>::type
+                    first, InputIterator last,
+                        const allocator_type& alloc = allocator_type()) : _alloc(alloc)
+            {
+                size_type i = 0;
+                size_type n = last - first;
+
+                _size     = n;
+                _capacity = n;
+                _max_size = 768614336404564650;
+                _vec_ptr = _alloc.allocate(_capacity);
+                while (first != last)
+                {
+                    _alloc.construct(_vec_ptr + i,*first);
+                    first++;
+                    i++;
+                };
+            };
+
+            vector (const vector& x)
+            {
+                size_type i = 0;
+
+                _size     = x._size;
+                _capacity = x._capacity;
+                _max_size = x._max_size;
+                _vec_ptr = _alloc.allocate(_capacity);
+                while (i < _size)
+                {
+                    _alloc.construct(_vec_ptr + i,x[i]);
+                    i++;
+                };
+            };  
+            /*****************************************************************/
             
-            /*****************************************************************************************************************/
+            /************************** Destructor ***************************/
+
+            ~vector()
+            {
+                size_type i;
+                for (i = 0; i < _size; i++)
+                    _alloc.destroy(_vec_ptr + i);
+                _alloc.deallocate(_vec_ptr,_capacity);
+            }
+
+            /*****************************************************************/
             
-            /**************************************************** Capacity ***************************************************/
+            /**************************** Capacity ***************************/
             
             size_type size() const { return _size ;};
 
@@ -145,12 +198,15 @@ namespace ft {
                 }
             };
 
-            /*****************************************************************************************************************/
+            /*****************************************************************/
             
-            /************************************************ Element Access *************************************************/
+            /************************** Element Access ***********************/
 
-            reference       operator[] (size_type n)        {       reference &tmp = _vec_ptr[n]; return tmp; };
-            const_reference operator[] (size_type n) const  { const reference &tmp = _vec_ptr[n]; return tmp; };
+            reference       operator[] (size_type n)        
+                            {       reference &tmp = _vec_ptr[n]; return tmp; };
+
+            const_reference operator[] (size_type n) const  
+                            { const reference &tmp = _vec_ptr[n]; return tmp; };
 
             reference       at (size_type n)
             {
@@ -169,15 +225,22 @@ namespace ft {
 
             // front and end should be tested !!!!!!
 
-            reference       front()         {       reference &tmp = _vec_ptr[0]; return tmp; };
-            const_reference front() const   { const reference &tmp = _vec_ptr[0]; return tmp; };
+            reference       front()     
+                            {       reference &tmp = _vec_ptr[0]; return tmp; };
 
-            reference        back()         {       reference &tmp = _vec_ptr[_size - 1]; return tmp; };
-            const_reference  back() const   { const reference &tmp = _vec_ptr[_size - 1]; return tmp; };
+            const_reference front() const
+                            { const reference &tmp = _vec_ptr[0]; return tmp; };
 
-            /*****************************************************************************************************************/
+
+            reference        back()  
+                          { reference &tmp = _vec_ptr[_size - 1]; return tmp; };
+
+            const_reference  back() const
+                    { const reference &tmp = _vec_ptr[_size - 1]; return tmp; };
+
+            /*******************************************************************/
             
-            /*************************************************** Modifiers ***************************************************/
+            /************************* Modifiers *******************************/
             
             void assign (size_type n, const value_type& val)
             {
@@ -200,7 +263,8 @@ namespace ft {
             };
 
             template <class InputIterator >
-            void assign (typename enable_if< !is_integral<InputIterator>::value ,InputIterator>::type  first, InputIterator last)
+            void assign (typename enable_if< !is_integral<InputIterator>::value,
+                                InputIterator>::type  first, InputIterator last)
             {
                 difference_type diff;
                 
@@ -325,7 +389,9 @@ namespace ft {
             };
             
             template <class InputIterator>
-            void insert (iterator position, typename enable_if<!is_integral<InputIterator>::value,InputIterator>::type first, InputIterator last)
+            void insert (iterator position, 
+                    typename enable_if<!is_integral<InputIterator>::value,
+                            InputIterator>::type first, InputIterator last)
             {
                 difference_type diff;
                 difference_type n;
@@ -420,6 +486,8 @@ namespace ft {
                 return position;
             };
 
+            friend void swap (vector& x, vector& y);
+
             void swap (vector& x)
             {
                 T *tmp = _vec_ptr;
@@ -455,8 +523,14 @@ namespace ft {
                 for (i = _size - 1 ; i > _size; i--)
                     _alloc.destroy(_vec_ptr + i);
                 _size = 0;
-            }
+            };
 
+        /*********************************************************************/
+
+        /***************************** Allocator *****************************/
+        allocator_type get_allocator() const { return this->_alloc; };
+
+            
         private :
             T *_vec_ptr;
             allocator_type _alloc;
@@ -465,7 +539,57 @@ namespace ft {
             size_type _capacity;
 
     };
+        /************************* Non Member Functions **********************/
 
+        template <class T, class Alloc>
+        bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+        {
+            if (lhs.size() == rhs.size())
+                return (ft::equal(lhs.begin(),lhs.end(),rhs.begin()));
+            return false;
+        };
+
+        template <class T, class Alloc>
+        bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+        {
+            return (!(lhs == rhs));
+        };
+            
+        template <class T, class Alloc>
+        bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+        {
+            return (ft::lexicographical_compare(lhs.begin(),lhs.end(),
+                        rhs.begin(),rhs.end()));
+        };
+            
+        template <class T, class Alloc>
+        bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+        {
+            return (!(ft::lexicographical_compare(rhs.begin(),rhs.end(),
+                        lhs.begin(),lhs.end())));
+        };
+            
+        template <class T, class Alloc>
+        bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+        {
+            return (ft::lexicographical_compare(rhs.begin(),rhs.end(),
+                        lhs.begin(),lhs.end()));
+        };
+
+        template <class T, class Alloc>
+        bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+        {
+            return (!(ft::lexicographical_compare(lhs.begin(),lhs.end(),
+                        rhs.begin(),rhs.end())));
+        };
+
+     /******************************** swap **********************************/
+        template <class T, class Alloc>
+        void swap (ft::vector<T,Alloc>& x, ft::vector<T,Alloc>& y)
+        {
+            x.swap(y);
+            return;
+        }
 };
 
 #endif

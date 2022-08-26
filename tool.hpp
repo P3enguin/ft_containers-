@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:38:02 by ybensell          #+#    #+#             */
-/*   Updated: 2022/07/31 17:28:24 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/08/01 13:28:01 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -394,7 +394,7 @@ struct is_integral<wchar_t>
 };
 
 template<>
-struct is_integral<signed char >
+struct is_integral<signed char>
 {  
     static const bool value = true;
 };
@@ -454,10 +454,86 @@ struct is_integral<unsigned long long int>
     static const bool value = true;
 };
 
-/********************* enable_if ********************************/
+/********************************* enable_if *********************************/
 
 template<bool B, typename T >
 struct enable_if { };
 
 template<typename T>
 struct enable_if<true, T> { typedef T type; };
+
+/*********************************** equal **********************************/
+namespace ft 
+{
+    template <class InputIterator1, class InputIterator2>
+    bool equal (InputIterator1 first1, InputIterator1 last1,
+                InputIterator2 first2)
+    {
+        while (first1 != last1)
+        {
+            if (*first1 != *first2)
+                return false;
+            first1++;
+            first2++;
+        };
+        return true;
+    };
+        
+    template <class InputIterator1, class InputIterator2, class BinaryPredicate>
+    bool equal (InputIterator1 first1, InputIterator1 last1,
+                InputIterator2 first2, BinaryPredicate pred)
+
+    {
+        while (first1 != last1)
+        {
+            if (!pred(*first1,*first2))
+                return false;
+            first1++;
+            first2++;
+        };
+        return true;
+    };
+};
+
+/*************************** lexicographical_compare *************************/
+
+/* Lexicographical_compare : the same comparaison  being done 
+    in dictionarries to sort words alphabatically in order of position,
+    if one of the character in the first range < second range ,the comparaison stop 
+    . if one of the ranges terminated , the shortest one considered the smallest */
+namespace ft
+{
+    template <class InputIterator1, class InputIterator2>
+    bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
+                                    InputIterator2 first2, InputIterator2 last2)
+    {
+        while (first1 != last1)
+        {
+            if (first2 == last2 || *first1 > *first2)
+                return false;
+            else if (*first1 < *first2)
+                return true;
+            first1++;
+            first2++;
+        };
+        return (first2 != last2);
+    };
+
+    template <class InputIterator1, class InputIterator2, class Compare>
+    bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
+                                    InputIterator2 first2, InputIterator2 last2,
+                                    Compare comp)
+    {
+        while (first1 != last1)
+        {
+            if (first2 == last2 || comp(*first2,*first1))
+                return false;
+            if (comp(*first1,*first2))
+                return true;
+            first1++;
+            first2++;
+        };
+        return (first2 != last2);
+    };
+};
+
