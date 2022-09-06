@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:38:02 by ybensell          #+#    #+#             */
-/*   Updated: 2022/08/01 13:28:01 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/08/31 16:07:28 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,34 +23,34 @@
 template <class Iterator> 
 class iterator_traits
 {
-    public :
-        typedef typename Iterator::iterator_category iterator_category;
-        typedef typename Iterator::value_type        value_type;
-        typedef typename Iterator::difference_type   difference_type;
-        typedef typename Iterator::pointer           pointer;
-        typedef typename Iterator::reference         reference;
+	public :
+		typedef typename Iterator::iterator_category iterator_category;
+		typedef typename Iterator::value_type        value_type;
+		typedef typename Iterator::difference_type   difference_type;
+		typedef typename Iterator::pointer           pointer;
+		typedef typename Iterator::reference         reference;
 };
 
 template <class T> 
 class iterator_traits<T*>
 {
-    public :
-        typedef std::random_access_iterator_tag     iterator_category;
-        typedef T                                   value_type;
-        typedef ptrdiff_t                           difference_type;
-        typedef T*                                  pointer;
-        typedef T&                                  reference;
+	public :
+		typedef std::random_access_iterator_tag     iterator_category;
+		typedef T                                   value_type;
+		typedef ptrdiff_t                           difference_type;
+		typedef T*                                  pointer;
+		typedef T&                                  reference;
 };
 
 template <class T>
 class iterator_traits<const T*>
 {
-    public :
-        typedef std::random_access_iterator_tag     iterator_category;
-        typedef T                                   value_type;
-        typedef ptrdiff_t                           difference_type;
-        typedef const T*                            const_pointer;
-        typedef const T&                            const_reference;
+	public :
+		typedef std::random_access_iterator_tag     iterator_category;
+		typedef T                                   value_type;
+		typedef ptrdiff_t                           difference_type;
+		typedef const T*                            const_pointer;
+		typedef const T&                            const_reference;
 };
 
 
@@ -61,116 +61,116 @@ class iterator_traits<const T*>
 template <typename P>
 class iter
 {
-    public :
-        
-    /*--------------------- Member types definition -------------------------*/
+	public :
+		
+	/*--------------------- Member types definition -------------------------*/
 
-        typedef P        value_type;
-        typedef P*       pointer;
-        typedef P&       reference;
+		typedef P        value_type;
+		typedef P*       pointer;
+		typedef P&       reference;
 
-        typedef typename std::ptrdiff_t difference_type;
-        typedef typename std::random_access_iterator_tag iterator_category;
+		typedef typename std::ptrdiff_t difference_type;
+		typedef typename std::random_access_iterator_tag iterator_category;
 
-    /*---------------------------- Constructors -----------------------------*/
+	/*---------------------------- Constructors -----------------------------*/
 
-        iter () {};
-        iter (P * ptr) {_iter = ptr;}
-        iter (const iter<P> &obj) {_iter = obj._iter; };
+		iter () {};
+		iter (P * ptr) {_iter = ptr;}
+		iter (const iter<P> &obj) {_iter = obj._iter; };
 
-        iter<P> &operator  = (const iter<P> &obj){ _iter = obj._iter;
-                                                    return *this ;};
+		iter<P> &operator  = (const iter<P> &obj){ _iter = obj._iter;
+													return *this ;};
  
-    /*------------------------- Operators Overloads -------------------------*/
+	/*------------------------- Operators Overloads -------------------------*/
 
-        bool    operator  == (const iter<P> &obj) const
-        {
-            if (_iter == obj.getIter())
-                return true;
-            else
-                return false;
-        };
+		bool    operator  == (const iter<P> &obj) const
+		{
+			if (_iter == obj.getIter())
+				return true;
+			else
+				return false;
+		};
 
-        bool    operator  != (const iter<P> &obj) const
-        {
-            if (_iter != obj.getIter())
-                return true;
-            return false;
-        };
-        
-        bool    operator  <  (const iter<P> &obj) const
-        {
-            if (_iter < obj.getIter())
-                return true;
-            return false;
-        };   
-        bool    operator <=  (const iter<P> &obj) const
-        {
-            if (_iter <= obj.getIter())
-                return true;
-            return false;
-        };   
-        bool    operator  >  (const iter<P> &obj) const
-        {
-            if (_iter > obj.getIter())
-                return true;
-            return false;
-        };   
-        bool     operator >= (const iter<P> &obj) const
-        {
-            if (_iter >= obj.getIter())
-                return true;
-            return false;
-        };
+		bool    operator  != (const iter<P> &obj) const
+		{
+			if (_iter != obj.getIter())
+				return true;
+			return false;
+		};
+		
+		bool    operator  <  (const iter<P> &obj) const
+		{
+			if (_iter < obj.getIter())
+				return true;
+			return false;
+		};   
+		bool    operator <=  (const iter<P> &obj) const
+		{
+			if (_iter <= obj.getIter())
+				return true;
+			return false;
+		};   
+		bool    operator  >  (const iter<P> &obj) const
+		{
+			if (_iter > obj.getIter())
+				return true;
+			return false;
+		};   
+		bool     operator >= (const iter<P> &obj) const
+		{
+			if (_iter >= obj.getIter())
+				return true;
+			return false;
+		};
 
-        iter<P>& operator +=(const difference_type &index) 
-                               { _iter += index ; return *this;} ;
-        iter<P>& operator -=(const difference_type &index) 
-                               { _iter -= index ; return *this;} ; 
-
-
-        iter<P>& operator ++() { _iter++ ; return *this;} ;
-        iter<P>& operator --() { _iter-- ; return *this;} ;
+		iter<P>& operator +=(const difference_type &index) 
+							   { _iter += index ; return *this;} ;
+		iter<P>& operator -=(const difference_type &index) 
+							   { _iter -= index ; return *this;} ; 
 
 
-        iter<P> operator ++(int) {
-            iter<P> tmp = *this;
-            _iter++;
-            return tmp;
-        };
+		iter<P>& operator ++() { _iter++ ; return *this;} ;
+		iter<P>& operator --() { _iter-- ; return *this;} ;
 
-        iter<P> operator --(int) {
-            iter<P> tmp = *this;
-            _iter--;
-            return tmp;
-        };
 
-        iter<P> operator +(const difference_type &index) {
-            iter<P> ret;
+		iter<P> operator ++(int) {
+			iter<P> tmp = *this;
+			_iter++;
+			return tmp;
+		};
 
-            ret._iter = _iter + index;
-            return ret;
-        };
-        iter<P> operator -(const difference_type &index) {
-            iter<P> ret;
+		iter<P> operator --(int) {
+			iter<P> tmp = *this;
+			_iter--;
+			return tmp;
+		};
 
-            ret._iter = _iter - index;
-            return ret;
-        };
-        
-        difference_type operator -(const iter<P> &obj) 
-            { return (std::distance(obj.getIter(),this->_iter)) ;};
+		iter<P> operator +(const difference_type &index) {
+			iter<P> ret;
 
-        P & operator  *()       { return *_iter ;};
-        P & operator  *() const { return *_iter ;};
-        P * operator ->()       { return *_iter ;};
+			ret._iter = _iter + index;
+			return ret;
+		};
+		iter<P> operator -(const difference_type &index) {
+			iter<P> ret;
 
-        //getter for _iter pointer 
-        P * getIter() const {return _iter;};
+			ret._iter = _iter - index;
+			return ret;
+		};
+		
+		difference_type operator -(const iter<P> &obj) 
+			{ return (std::distance(obj.getIter(),this->_iter)) ;};
 
-    protected :
-        P *_iter;  /* this is the pointer that track my iterator since, 
-                    random access iterators are more like an arrays */
+		P & operator  *()       { return *_iter ;};
+		P & operator  *() const { return *_iter ;};
+		P * operator ->()       { return *_iter ;};
+
+		//getter for _iter pointer 
+		P * getIter() const {return _iter;};
+
+	protected :
+		P *_iter;  /* this is the pointer that track my iterator since, 
+					random access iterators are more like an arrays */
 };    
 
 /*****************************************************************************/
@@ -178,178 +178,178 @@ class iter
 /***************************** Reverse Iterator ******************************/
 
 namespace ft {
-    template <class Iterator> 
-    class reverse_iterator : public iter<typename Iterator::value_type>
-    {
-        public :
-    /*--------------------- Member types definition -------------------------*/
-    
-            typedef          Iterator                        iterator_type ;
-            typedef typename Iterator::iterator_category     iterator_category;
-            typedef typename Iterator::value_type            value_type;
-            typedef typename Iterator::difference_type       difference_type;
-            typedef typename Iterator::pointer               pointer;
-            typedef typename Iterator::reference             reference;
-            
-    /*---------------------------- Constructors -----------------------------*/
+	template <class Iterator> 
+	class reverse_iterator : public iter<typename Iterator::value_type>
+	{
+		public :
+	/*--------------------- Member types definition -------------------------*/
+	
+			typedef          Iterator                        iterator_type ;
+			typedef typename Iterator::iterator_category     iterator_category;
+			typedef typename Iterator::value_type            value_type;
+			typedef typename Iterator::difference_type       difference_type;
+			typedef typename Iterator::pointer               pointer;
+			typedef typename Iterator::reference             reference;
+			
+	/*---------------------------- Constructors -----------------------------*/
 
-            reverse_iterator(){};
-    
-            explicit reverse_iterator (iterator_type it)
-            {
-                this->_iter = it.getIter();
-            };
-            
-            template <class Iter>
-            reverse_iterator (const reverse_iterator<Iter>& rev_it)
-            {
-                this->_iter  = rev_it.getIter();
-            };
-            
-    /*------------------------- Operators Overloads -------------------------*/
+			reverse_iterator(){};
+	
+			explicit reverse_iterator (iterator_type it)
+			{
+				this->_iter = it.getIter();
+			};
+			
+			template <class Iter>
+			reverse_iterator (const reverse_iterator<Iter>& rev_it)
+			{
+				this->_iter  = rev_it.getIter();
+			};
+			
+	/*------------------------- Operators Overloads -------------------------*/
 
-            reverse_iterator<iterator_type>& operator = 
-                            (const reverse_iterator<iterator_type>& rev_it)
-            {
-                this->_iter = rev_it.getIter();
-                return (*this);
-            };
-            
-            reverse_iterator<iterator_type>& operator +=
-                (const difference_type &index)
-                     {  this->_iter -= index ; return *this; } ;
+			reverse_iterator<iterator_type>& operator = 
+							(const reverse_iterator<iterator_type>& rev_it)
+			{
+				this->_iter = rev_it.getIter();
+				return (*this);
+			};
+			
+			reverse_iterator<iterator_type>& operator +=
+				(const difference_type &index)
+					 {  this->_iter -= index ; return *this; } ;
 
-            reverse_iterator<iterator_type>& operator -=
-                (const difference_type &index) 
-                     {  this->_iter += index ; return *this; } ; 
+			reverse_iterator<iterator_type>& operator -=
+				(const difference_type &index) 
+					 {  this->_iter += index ; return *this; } ; 
 
-            reverse_iterator<iterator_type>& operator ++
-                  () {  this->_iter-- ; return *this;} ;
+			reverse_iterator<iterator_type>& operator ++
+				  () {  this->_iter-- ; return *this;} ;
 
-            reverse_iterator<iterator_type>& operator --
-                  () {  this->_iter++ ; return *this;} ;
-
-
-            reverse_iterator<iterator_type> operator ++(int)
-            {
-                reverse_iterator<iterator_type> tmp = *this;
-
-                this->_iter--;
-                return tmp;
-            };
-
-            reverse_iterator<iterator_type> operator --(int)
-            {
-                reverse_iterator<iterator_type> tmp = *this;
-
-                this->_iter++;
-                return tmp;
-            };
-
-            reverse_iterator<iterator_type> operator +
-                            (const difference_type &index)
-            {
-                reverse_iterator<iterator_type> ret;
-
-                ret._iter =  this->_iter - index; 
-                return ret;
-            };
-            
-            reverse_iterator<iterator_type> operator -
-                            (const difference_type &index)
-            {
-                reverse_iterator<iterator_type> ret;
-
-                ret._iter =  this->_iter + index;
-                return ret;
-            };
-            
-            reference operator  *()            { return *this->_iter;    };
-            pointer   operator ->()            { return &(operator *()); };
-            reference operator  *()     const  { return *this->_iter;    };
+			reverse_iterator<iterator_type>& operator --
+				  () {  this->_iter++ ; return *this;} ;
 
 
-            reference operator   [](difference_type n) const
-                                               {return *(this->_iter - n);};
+			reverse_iterator<iterator_type> operator ++(int)
+			{
+				reverse_iterator<iterator_type> tmp = *this;
+
+				this->_iter--;
+				return tmp;
+			};
+
+			reverse_iterator<iterator_type> operator --(int)
+			{
+				reverse_iterator<iterator_type> tmp = *this;
+
+				this->_iter++;
+				return tmp;
+			};
+
+			reverse_iterator<iterator_type> operator +
+							(const difference_type &index)
+			{
+				reverse_iterator<iterator_type> ret;
+
+				ret._iter =  this->_iter - index; 
+				return ret;
+			};
+			
+			reverse_iterator<iterator_type> operator -
+							(const difference_type &index)
+			{
+				reverse_iterator<iterator_type> ret;
+
+				ret._iter =  this->_iter + index;
+				return ret;
+			};
+			
+			reference operator  *()            { return *this->_iter;    };
+			pointer   operator ->()            { return &(operator *()); };
+			reference operator  *()     const  { return *this->_iter;    };
+
+
+			reference operator   [](difference_type n) const
+											   {return *(this->_iter - n);};
  
-            iterator_type base() const          { return this->_iter + 1;};
-    };
+			iterator_type base() const         { return this->_iter + 1;};
+	};
 };
 
-    /*---------------------- Non Member type functions ----------------------*/
+	/*---------------------- Non Member type functions ----------------------*/
 
-        template <class Iterator>
-        bool operator== (const ft::reverse_iterator<Iterator>& lhs,
-                        const ft::reverse_iterator<Iterator>& rhs)
-        {
-            if (lhs.getIter() == rhs.getIter())
-                    return true;
-                return false;
-        };
+		template <class Iterator>
+		bool operator== (const ft::reverse_iterator<Iterator>& lhs,
+						const ft::reverse_iterator<Iterator>& rhs)
+		{
+			if (lhs.getIter() == rhs.getIter())
+					return true;
+				return false;
+		};
 
-        template <class Iterator>
-        bool operator!= (const ft::reverse_iterator<Iterator>& lhs,
-                            const ft::reverse_iterator<Iterator>& rhs)
-        {
-            if (lhs.getIter() != rhs.getIter())
-                    return true;
-                return false;
-        };
+		template <class Iterator>
+		bool operator!= (const ft::reverse_iterator<Iterator>& lhs,
+							const ft::reverse_iterator<Iterator>& rhs)
+		{
+			if (lhs.getIter() != rhs.getIter())
+					return true;
+				return false;
+		};
 
-        template <class Iterator>
-        bool operator<  (const ft::reverse_iterator<Iterator>& lhs,
-                            const ft::reverse_iterator<Iterator>& rhs)
-        {
-            if (lhs.getIter() > rhs.getIter())
-                    return true;
-                return false;
-        };
-        
-        template <class Iterator>
-        bool operator<= (const ft::reverse_iterator<Iterator>& lhs,
-                            const ft::reverse_iterator<Iterator>& rhs)
-        {
-            if (lhs.getIter() >= rhs.getIter())
-                    return true;
-                return false;
-        };
+		template <class Iterator>
+		bool operator<  (const ft::reverse_iterator<Iterator>& lhs,
+							const ft::reverse_iterator<Iterator>& rhs)
+		{
+			if (lhs.getIter() > rhs.getIter())
+					return true;
+				return false;
+		};
+		
+		template <class Iterator>
+		bool operator<= (const ft::reverse_iterator<Iterator>& lhs,
+							const ft::reverse_iterator<Iterator>& rhs)
+		{
+			if (lhs.getIter() >= rhs.getIter())
+					return true;
+				return false;
+		};
 
-        template <class Iterator>
-        bool operator>  (const ft::reverse_iterator<Iterator>& lhs,
-                            const ft::reverse_iterator<Iterator>& rhs)
-        {
-            if (lhs.getIter() < rhs.getIter())
-                    return true;
-                return false;
-        };
+		template <class Iterator>
+		bool operator>  (const ft::reverse_iterator<Iterator>& lhs,
+							const ft::reverse_iterator<Iterator>& rhs)
+		{
+			if (lhs.getIter() < rhs.getIter())
+					return true;
+				return false;
+		};
 
-        template <class Iterator>
-        bool operator>= (const ft::reverse_iterator<Iterator>& lhs,
-                            const ft::reverse_iterator<Iterator>& rhs)
-        {
-            if (lhs.getIter() <= rhs.getIter())
-                    return true;
-                return false;
-        };
+		template <class Iterator>
+		bool operator>= (const ft::reverse_iterator<Iterator>& lhs,
+							const ft::reverse_iterator<Iterator>& rhs)
+		{
+			if (lhs.getIter() <= rhs.getIter())
+					return true;
+				return false;
+		};
 
-        template <class Iterator>
-            ft::reverse_iterator<Iterator> operator+ (
-                    typename ft::reverse_iterator<Iterator>::difference_type n,
-                            const ft::reverse_iterator<Iterator>& rev_it)
-        {
-            ft::reverse_iterator<Iterator> tmp(rev_it);
+		template <class Iterator>
+			ft::reverse_iterator<Iterator> operator+ (
+					typename ft::reverse_iterator<Iterator>::difference_type n,
+							const ft::reverse_iterator<Iterator>& rev_it)
+		{
+			ft::reverse_iterator<Iterator> tmp(rev_it);
 
-            tmp += n;
-            return tmp;
-        };
+			tmp += n;
+			return tmp;
+		};
 
-        template <class Iterator>
-            typename ft::reverse_iterator<Iterator>::difference_type operator- 
-            ( const ft::reverse_iterator<Iterator>& lhs,
-                const ft::reverse_iterator<Iterator>& rhs)
-            {
-                return  rhs.base() - lhs.base(); 
-            };
+		template <class Iterator>
+			typename ft::reverse_iterator<Iterator>::difference_type operator- 
+			( const ft::reverse_iterator<Iterator>& lhs,
+				const ft::reverse_iterator<Iterator>& rhs)
+			{
+				return  rhs.base() - lhs.base(); 
+			};
 
 /***************************** is_integral ***********************************/
 
@@ -359,99 +359,99 @@ for info : https://www.cprogramming.com/tutorial/template_specialization.html */
 template<typename T >
 struct is_integral
 {  
-    static const bool value = false;
+	static const bool value = false;
 };
 
 template<>
 struct is_integral<bool>
 {
-    static const bool value = true;
+	static const bool value = true;
 };
 
 template<>
 struct is_integral <char>
 {  
-    static const bool value = true;
+	static const bool value = true;
 };
 
 template<>
 struct is_integral < char16_t >
 {  
-    static const bool value = true;
+	static const bool value = true;
 };
 
 
 template<>
 struct is_integral<char32_t>
 {  
-    static const bool value = true;
+	static const bool value = true;
 };
 
 template<>
 struct is_integral<wchar_t>
 {  
-    static const bool value = true;
+	static const bool value = true;
 };
 
 template<>
 struct is_integral<signed char>
 {  
-    static const bool value = true;
+	static const bool value = true;
 };
 
 template<>
 struct is_integral<short int>
 {  
-    static const bool value = true;
+	static const bool value = true;
 };
 
 template<>
 struct is_integral<int>
 {  
-    static const bool value = true;
+	static const bool value = true;
 };
 
 
 template<>
 struct is_integral<long int>
 {  
-    static const bool value = true;
+	static const bool value = true;
 };
 
 template<>
 struct is_integral<long long int>
 {  
-    static const bool value = true;
+	static const bool value = true;
 };
 
 template<>
 struct is_integral< unsigned char>
 {  
-    static const bool value = true;
+	static const bool value = true;
 };
 
 template<>
 struct is_integral<unsigned short int>
 {  
-    static const bool value = true;
+	static const bool value = true;
 };
 
 template<>
 struct is_integral<unsigned int>
 {  
-    static const bool value = true;
+	static const bool value = true;
 };
 
 template<>
 struct is_integral<unsigned long int>
 {  
-    static const bool value = true;
+	static const bool value = true;
 };
 
 template<>
 struct is_integral<unsigned long long int>
 {  
-    static const bool value = true;
+	static const bool value = true;
 };
 
 /********************************* enable_if *********************************/
@@ -465,75 +465,75 @@ struct enable_if<true, T> { typedef T type; };
 /*********************************** equal **********************************/
 namespace ft 
 {
-    template <class InputIterator1, class InputIterator2>
-    bool equal (InputIterator1 first1, InputIterator1 last1,
-                InputIterator2 first2)
-    {
-        while (first1 != last1)
-        {
-            if (*first1 != *first2)
-                return false;
-            first1++;
-            first2++;
-        };
-        return true;
-    };
-        
-    template <class InputIterator1, class InputIterator2, class BinaryPredicate>
-    bool equal (InputIterator1 first1, InputIterator1 last1,
-                InputIterator2 first2, BinaryPredicate pred)
+	template <class InputIterator1, class InputIterator2>
+	bool equal (InputIterator1 first1, InputIterator1 last1,
+				InputIterator2 first2)
+	{
+		while (first1 != last1)
+		{
+			if (*first1 != *first2)
+				return false;
+			first1++;
+			first2++;
+		};
+		return true;
+	};
+		
+	template <class InputIterator1, class InputIterator2, class BinaryPredicate>
+	bool equal (InputIterator1 first1, InputIterator1 last1,
+				InputIterator2 first2, BinaryPredicate pred)
 
-    {
-        while (first1 != last1)
-        {
-            if (!pred(*first1,*first2))
-                return false;
-            first1++;
-            first2++;
-        };
-        return true;
-    };
+	{
+		while (first1 != last1)
+		{
+			if (!pred(*first1,*first2))
+				return false;
+			first1++;
+			first2++;
+		};
+		return true;
+	};
 };
 
 /*************************** lexicographical_compare *************************/
 
 /* Lexicographical_compare : the same comparaison  being done 
-    in dictionarries to sort words alphabatically in order of position,
-    if one of the character in the first range < second range ,the comparaison stop 
-    . if one of the ranges terminated , the shortest one considered the smallest */
+	in dictionarries to sort words alphabatically in order of position,
+	if one of the character in the first range < second range ,the comparaison stop 
+	. if one of the ranges terminated , the shortest one considered the smallest */
 namespace ft
 {
-    template <class InputIterator1, class InputIterator2>
-    bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
-                                    InputIterator2 first2, InputIterator2 last2)
-    {
-        while (first1 != last1)
-        {
-            if (first2 == last2 || *first1 > *first2)
-                return false;
-            else if (*first1 < *first2)
-                return true;
-            first1++;
-            first2++;
-        };
-        return (first2 != last2);
-    };
+	template <class InputIterator1, class InputIterator2>
+	bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
+									InputIterator2 first2, InputIterator2 last2)
+	{
+		while (first1 != last1)
+		{
+			if (first2 == last2 || *first1 > *first2)
+				return false;
+			else if (*first1 < *first2)
+				return true;
+			first1++;
+			first2++;
+		};
+		return (first2 != last2);
+	};
 
-    template <class InputIterator1, class InputIterator2, class Compare>
-    bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
-                                    InputIterator2 first2, InputIterator2 last2,
-                                    Compare comp)
-    {
-        while (first1 != last1)
-        {
-            if (first2 == last2 || comp(*first2,*first1))
-                return false;
-            if (comp(*first1,*first2))
-                return true;
-            first1++;
-            first2++;
-        };
-        return (first2 != last2);
-    };
+	template <class InputIterator1, class InputIterator2, class Compare>
+	bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
+									InputIterator2 first2, InputIterator2 last2,
+									Compare comp)
+	{
+		while (first1 != last1)
+		{
+			if (first2 == last2 || comp(*first2,*first1))
+				return false;
+			if (comp(*first1,*first2))
+				return true;
+			first1++;
+			first2++;
+		};
+		return (first2 != last2);
+	};
 };
 
