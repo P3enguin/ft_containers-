@@ -6,16 +6,17 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:38:02 by ybensell          #+#    #+#             */
-/*   Updated: 2022/08/31 16:07:28 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/09/08 11:36:17 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef TOOL_HPP
+#define TOOL_HPP
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <typeinfo>
-
-
 
 
 /***************************** iterator_traits *******************************/
@@ -462,7 +463,7 @@ struct enable_if { };
 template<typename T>
 struct enable_if<true, T> { typedef T type; };
 
-/*********************************** equal **********************************/
+/*********************************** Equal **********************************/
 namespace ft 
 {
 	template <class InputIterator1, class InputIterator2>
@@ -535,5 +536,80 @@ namespace ft
 		};
 		return (first2 != last2);
 	};
-};
+}
 
+/************************************ Pair ***********************************/
+namespace ft 
+{
+	template <class T1, class T2> 
+	struct pair
+	{
+		typedef T1 first_type;
+		typedef T2 second_type;
+
+		first_type first;
+		second_type second;
+
+		pair():first(),second(){}
+
+		template<class U, class V> 
+		pair (const pair<U,V>& pr) : first(pr.first),second(pr.second){}
+
+		pair (const first_type& a, const second_type& b) : first(a),second(b){}
+
+		pair& operator= (const pair& pr){first = pr.first; second = pr.second;
+				return *this;}
+		
+		void swap (pair& pr){
+			std::swap(first,pr.first);
+			std::swap(second,pr.second);
+		}
+	};
+	template <class T1, class T2>
+	bool operator== (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return (lhs.first == rhs.first && lhs.second == rhs.second);
+	}
+	template <class T1, class T2>
+	bool operator!= (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return (lhs != rhs);
+	}
+	template <class T1, class T2>
+	bool operator<  (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return (lhs.first < rhs.first || (!(rhs.first<lhs.first) 
+			&& lhs.second < rhs.second));
+	}
+	template <class T1, class T2>
+	bool operator<= (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return !(rhs<lhs);
+	}
+
+	template <class T1, class T2>
+	bool operator>  (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return (rhs < lhs);
+	}
+	template <class T1, class T2>
+	bool operator>= (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return (!(lhs<rhs));
+	}
+
+	template <class T1, class T2>
+ 	void swap (pair<T1,T2>& x, pair<T1,T2>& y)
+	{
+		std::swap(x.first,y.first);
+		std::swap(x.second,y.second);
+	}
+	
+	template <class T1, class T2>
+	pair<T1,T2> make_pair (T1 x, T2 y)
+	{
+		return (pair<T1,T2>(x,y));
+	}
+}
+
+#endif
