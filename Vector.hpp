@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/09/06 14:03:28 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/09/10 13:41:41 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,10 @@ namespace ft {
             }
 
             template <class InputIterator>
-            vector (typename enable_if<!is_integral<InputIterator>::value,InputIterator>::type
+            vector (typename enable_if<!is_integral<InputIterator>::value,
+                    InputIterator>::type
                     first, InputIterator last,
-                        const allocator_type& alloc = allocator_type()) : _alloc(alloc)
+                    const allocator_type& alloc = allocator_type()) : _alloc(alloc)
             {
                 size_type i = 0;
                 size_type n = last - first;
