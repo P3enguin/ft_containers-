@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/09/10 13:41:41 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/08 16:07:54 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ namespace ft {
             
             explicit vector (const allocator_type & alloc = allocator_type())
             {
-                _vec_ptr = nullptr;
+                _vec_ptr = NULL;
                 _size = 0;
                 _capacity = 0;
                 _max_size = 768614336404564650;
@@ -87,7 +87,7 @@ namespace ft {
                 _max_size = 768614336404564650;
                 _vec_ptr = _alloc.allocate(_capacity);
                 for (size_type i = 0; i < _size ; i++ )
-                    _alloc.construct(_vec_ptr + i,val);
+                    _alloc.construct(_vec_ptr + i,val);    
             }
 
             template <class InputIterator>
