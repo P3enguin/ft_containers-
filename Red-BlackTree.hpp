@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/10 15:47:46 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/11 14:57:58 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # define COUNT 10
 
 template<class T>
-struct s_tree{
+struct s_tree {
 	struct s_tree *parent;
 	struct s_tree *left;
 	struct s_tree *right;
@@ -31,15 +31,19 @@ struct s_tree{
 template <class T>
 class RBtree 
 {
-	s_tree<T> *ROOT;
+
 	public :
-		RBtree() { this->root = NULL; } 
+		RBtree() 
+		{
+			this->root = NULL;
+		} 
 
 		s_tree<T>* createNode(T data)
 		{
 			s_tree<T> *n;
 
-			n = new s_tree<T>;
+			n = _alloc.allocate(1);
+			_alloc.construct(n,data);
 			n->parent = NULL;
 			n->left = NULL;
 			n->right = NULL;
@@ -441,7 +445,8 @@ class RBtree
 					tmp->parent->left = NULL;
 				else if (tmp->parent->right == tmp)
 					tmp->parent->right = NULL;
-				delete tmp;
+				_alloc.destroy(tmp->data);
+				_alloc.deallocate(tmp);
 				tmp = NULL;
 			}
 			return ;
@@ -456,7 +461,8 @@ class RBtree
 			if (n == this->root)
 			{
 				this->root = NULL;
-				delete n;
+				_alloc.destroy(n->data);
+				_alloc.deallocate(n);
 				n = NULL;
 				return ;
 			}
@@ -506,13 +512,15 @@ class RBtree
 
 		void	freeTree(s_tree<T> *root)
 		{
+			/* deletion using Preorder traversel */
 			if (root)
 			{
 				if (root->left)
 					freeTree(root->left);
 				if (root->right)
 					freeTree(root->right);
-				delete root;
+				_alloc.destroy(root->data);
+				_alloc.deallocate(root);
 			}
 			return ;
 		}
@@ -543,6 +551,7 @@ class RBtree
 		s_tree<T>*	getRoot() {return this->root;}
 
 		private :
+			std::allocator<s_tree<T>> _alloc;
 			s_tree<T> *root;
 
 };

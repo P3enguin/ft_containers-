@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:38:02 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/10 12:03:16 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/11 15:04:04 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,43 +17,45 @@
 #include <iostream>
 #include <string>
 #include <typeinfo>
-
+#include "Red-BlackTree.hpp"
 
 /***************************** iterator_traits *******************************/
 
-template <class Iterator> 
-class iterator_traits
-{
-	public :
-		typedef typename Iterator::iterator_category iterator_category;
-		typedef typename Iterator::value_type        value_type;
-		typedef typename Iterator::difference_type   difference_type;
-		typedef typename Iterator::pointer           pointer;
-		typedef typename Iterator::reference         reference;
-};
+namespace ft {
+	template <class Iterator> 
+		class iterator_traits
+		{
+			public :
+				typedef typename Iterator::iterator_category iterator_category;
+				typedef typename Iterator::value_type        value_type;
+				typedef typename Iterator::difference_type   difference_type;
+				typedef typename Iterator::pointer           pointer;
+				typedef typename Iterator::reference         reference;
+		};
 
-template <class T> 
-class iterator_traits<T*>
-{
-	public :
-		typedef std::random_access_iterator_tag     iterator_category;
-		typedef T                                   value_type;
-		typedef ptrdiff_t                           difference_type;
-		typedef T*                                  pointer;
-		typedef T&                                  reference;
-};
+		template <class T> 
+		class iterator_traits<T*>
+		{
+			public :
+				typedef std::random_access_iterator_tag     iterator_category;
+				typedef T                                   value_type;
+				typedef ptrdiff_t                           difference_type;
+				typedef T*                                  pointer;
+				typedef T&                                  reference;
+		};
 
-template <class T>
-class iterator_traits<const T*>
-{
-	public :
-		typedef std::random_access_iterator_tag     iterator_category;
-		typedef T                                   value_type;
-		typedef ptrdiff_t                           difference_type;
-		typedef const T*                            const_pointer;
-		typedef const T&                            const_reference;
-};
+		template <class T>
+		class iterator_traits<const T*>
+		{
+			public :
+				typedef std::random_access_iterator_tag     iterator_category;
+				typedef T                                   value_type;
+				typedef ptrdiff_t                           difference_type;
+				typedef const T*                            const_pointer;
+				typedef const T&                            const_reference;
+		};
 
+	}
 
 
 /*****************************************************************************/
@@ -547,13 +549,13 @@ namespace ft
 		typedef T1 first_type;
 		typedef T2 second_type;
 
-		first_type first;
-		second_type second;
+		first_type	first;
+		second_type	second;
 
-		pair():first(),second(){}
+		pair() :first(),second(){}
 
 		template<class U, class V> 
-		pair (const pair<U,V>& pr) : first(pr.first),second(pr.second){}
+		pair (const pair<U, V>& pr) : first(pr.first),second(pr.second){}
 
 		pair (const first_type& a, const second_type& b) : first(a),second(b){}
 
@@ -565,11 +567,13 @@ namespace ft
 			std::swap(second,pr.second);
 		}
 	};
+
 	template <class T1, class T2>
 	bool operator== (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{
 		return (lhs.first == rhs.first && lhs.second == rhs.second);
 	}
+
 	template <class T1, class T2>
 	bool operator!= (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{
@@ -611,5 +615,75 @@ namespace ft
 		return (pair<T1,T2>(x,y));
 	}
 }
+
+
+/*************** Bidirectional Operator *********************/
+
+template <typename P>
+class Bi_Iter
+{
+	public :
+		
+	/*--------------------- Member types definition -------------------------*/
+
+		typedef s_tree<P>::data	value_type;
+		typedef s_tree<P>*	pointer;
+
+
+		typedef typename std::ptrdiff_t difference_type;
+		typedef typename std::bidirectional_iterator_tag     iterator_category;
+
+	/*---------------------------- Constructors -----------------------------*/
+
+		iter () {};
+		iter (pointer ptr) {_iter = ptr;}
+		iter (const iter<P> &obj) {_iter = obj._iter; };
+
+		iter<P> &operator  = (const iter<P> &obj){ _iter = obj._iter;
+													return *this ;};
+ 
+	/*------------------------- Operators Overloads -------------------------*/
+
+		bool    operator  == (const iter<P> &obj) const
+		{
+			if (_iter == obj.getIter())
+				return true;
+			else
+				return false;
+		};
+
+		bool    operator  != (const iter<P> &obj) const
+		{
+			if (_iter != obj.getIter())
+				return true;
+			return false;
+		};
+
+		iter<P>& operator ++() { _iter++ ; return *this;} ;
+		iter<P>& operator --() { _iter-- ; return *this;} ;
+
+
+		iter<P> operator ++(int) {
+			iter<P> tmp = *this;
+			_iter++;
+			return tmp;
+		};
+
+		iter<P> operator --(int) {
+			iter<P> tmp = *this;
+			_iter--;
+			return tmp;
+		};
+
+		P & operator  *()       { return *_iter ;};
+		P & operator  *() const { return *_iter ;};
+		P * operator ->()       { return *_iter ;};
+
+		//getter for _iter pointer 
+		P * getIter() const {return _iter;};
+
+	protected :
+		pointer _iter;  /* this is the pointer that track memory of the container */
+};    
 
 #endif

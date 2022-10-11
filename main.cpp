@@ -6,28 +6,25 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 11:52:40 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/09 16:48:36 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/11 15:48:33 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+// #include "map.hpp"
 #include "Vector.hpp"
-// #ifndef NS
-// #define NS ft
 
-#include <vector>
+
 
 
 int main()
-{
-	ft::vector<int> c(5,5);
+{	
+	// ft::vector<int> a(5,5);
+	// ft::vector<int>::iterator it;
 
-	
+	// it = a.begin();
 
-	ft::vector<int> a(c.end(),c.end() - 1);
+	// std::cout << *it << std::endl;
 
-	ft::vector<int>::iterator it;
-	for (it = a.begin() ; it != a.end();it++)
-		std::cout  << *it << std::endl;
 
 }
 
