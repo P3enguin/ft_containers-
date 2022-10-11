@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:38:02 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/11 15:04:04 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/11 16:49:22 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -619,15 +619,15 @@ namespace ft
 
 /*************** Bidirectional Operator *********************/
 
-template <typename P>
+template <typename P,class tree>
 class Bi_Iter
 {
 	public :
 		
 	/*--------------------- Member types definition -------------------------*/
 
-		typedef s_tree<P>::data	value_type;
-		typedef s_tree<P>*	pointer;
+		typedef s_tree<P>	value_type;
+		typedef s_tree<P>*		pointer;
 
 
 		typedef typename std::ptrdiff_t difference_type;
@@ -635,55 +635,63 @@ class Bi_Iter
 
 	/*---------------------------- Constructors -----------------------------*/
 
-		iter () {};
-		iter (pointer ptr) {_iter = ptr;}
-		iter (const iter<P> &obj) {_iter = obj._iter; };
+		Bi_Iter () {};
+		Bi_Iter (pointer ptr) {_iter = ptr;}
+		Bi_Iter (const Bi_Iter<P,tree> &obj) {_iter = obj._iter; _tree = obj._tree; };
 
-		iter<P> &operator  = (const iter<P> &obj){ _iter = obj._iter;
-													return *this ;};
+		Bi_Iter<P,tree> &operator  = (const Bi_Iter<P,tree> &obj){ _iter = obj._iter;
+						_tree = obj._tree; return *this ;};
  
 	/*------------------------- Operators Overloads -------------------------*/
 
-		bool    operator  == (const iter<P> &obj) const
+		bool    operator  == (const Bi_Iter<P,tree> &obj) const
 		{
-			if (_iter == obj.getIter())
+			if (_iter == obj.getIter() && _tree == obj.getTree())
 				return true;
 			else
 				return false;
-		};
+		}
 
-		bool    operator  != (const iter<P> &obj) const
+		bool    operator  != (const Bi_Iter<P,tree> &obj) const
 		{
-			if (_iter != obj.getIter())
+			if (_iter != obj.getIter() && _tree != obj.getTree())
 				return true;
 			return false;
-		};
+		}
 
-		iter<P>& operator ++() { _iter++ ; return *this;} ;
-		iter<P>& operator --() { _iter-- ; return *this;} ;
+		Bi_Iter<P,tree>& operator ++() { 
+			_iter = _tree->successor(_iter->data);
+			return *this;
+			} 
 
+		Bi_Iter<P,tree>& operator --() {
+				_iter = _tree->predeccessor(_iter->data);
+				return *this;
+			}
 
-		iter<P> operator ++(int) {
-			iter<P> tmp = *this;
-			_iter++;
+		Bi_Iter<P,tree> operator ++(int) {
+			Bi_Iter<P,tree> tmp = *this;
+			_iter = _tree->successor(_iter->data);
 			return tmp;
-		};
+		}
 
-		iter<P> operator --(int) {
-			iter<P> tmp = *this;
-			_iter--;
+		Bi_Iter<P,tree> operator --(int) {
+			Bi_Iter<P,tree> tmp = *this;
+			_iter = _tree->predeccessor(_iter->data);
 			return tmp;
-		};
+		}
 
-		P & operator  *()       { return *_iter ;};
-		P & operator  *() const { return *_iter ;};
-		P * operator ->()       { return *_iter ;};
+		P & operator  *()       { return _iter->data ;}
+		P & operator  *() const { return _iter->data ;}
+		pointer  operator ->()  { return _iter->data ;}
 
 		//getter for _iter pointer 
-		P * getIter() const {return _iter;};
+		pointer getIter() const {return _iter;}
+		RBtree<P>* getTree() const {return _tree;}
 
 	protected :
-		pointer _iter;  /* this is the pointer that track memory of the container */
+		pointer		_iter;  /* this is the pointer that track memory of the container */
+		RBtree<P>	*_tree;
 };    
 
 #endif

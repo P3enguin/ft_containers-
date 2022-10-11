@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/11 13:55:58 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/11 16:50:51 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include <string>
 #include <iostream>
 #include "tool.hpp"
-#include "Red-BlackTree.hpp"
 
 namespace ft {
 
@@ -35,6 +34,7 @@ namespace ft {
 			typedef pair<const key_type, mapped_type>        value_type;
 			typedef Compare									 key_compare;
 			typedef Allocator                                allocator_type;
+			typedef RBtree<value_type>				 		 RBtree;
 			typedef typename allocator_type::reference       reference;
 			typedef typename allocator_type::const_reference const_reference;
 			typedef typename allocator_type::pointer         pointer;
@@ -45,31 +45,30 @@ namespace ft {
 			explicit map (const key_compare& comp = key_compare(),
 				const allocator_type& alloc = allocator_type())
 			{
-				_tree();
 				_alloc = alloc;
 				_comp = comp;
 			}
 		
-			template <class InputIterator>
-			map (InputIterator first, InputIterator last,
-				const key_compare& comp = key_compare(),
-				const allocator_type& alloc = allocator_type())
-			{
+			// template <class InputIterator>
+			// map (InputIterator first, InputIterator last,
+			// 	const key_compare& comp = key_compare(),
+			// 	const allocator_type& alloc = allocator_type())
+			// {
 					
-			}
+			// }
 			
-			map (const map& x)
-			{
+			// map (const map& x)
+			// {
 				
-			}
+			// }
 			
-			typedef	Bi_Iter<value_type>                 iterator;
-			typedef Bi_Iter<const value_type>           const_iterator;
+			typedef	Bi_Iter<value_type,RBtree>          	iterator;
+			typedef Bi_Iter<const value_type,RBtree>          const_iterator;
 			typedef std::reverse_iterator<iterator>         reverse_iterator;
 			typedef std::reverse_iterator<const_iterator>    const_reverse_iterator;
 			// typedef INSERT_RETURN_TYPE<iterator, node_type>  insert_return_type;    
 		private :
-			RBtree<value_type> _tree;
+			RBtree _tree;
 			allocator_type _alloc ;
 			key_compare _comp;
 	};

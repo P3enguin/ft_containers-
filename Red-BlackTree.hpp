@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/11 14:57:58 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/11 16:46:02 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,6 +251,7 @@ class RBtree
 
 			// 	- if the node doesnt have a left subtree , the successor is
 			// 		one of Its ancestor
+
 			t = this->root;
 			pred = NULL;
 			while (t)
@@ -551,7 +552,7 @@ class RBtree
 		s_tree<T>*	getRoot() {return this->root;}
 
 		private :
-			std::allocator<s_tree<T>> _alloc;
+			std::allocator< s_tree<T> > _alloc;
 			s_tree<T> *root;
 
 };
