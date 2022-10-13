@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/11 16:46:02 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/13 13:30:40 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,32 +24,49 @@ struct s_tree {
 	struct s_tree *parent;
 	struct s_tree *left;
 	struct s_tree *right;
-	T data;
+	T* data;
 	bool color;
 } ; 
 
 template <class T>
 class RBtree 
 {
-
 	public :
+
 		RBtree() 
 		{
 			this->root = NULL;
 		} 
 
-		s_tree<T>* createNode(T data)
+		void createNode(s_tree<T> *n)
 		{
-			s_tree<T> *n;
+			// s_tree<T> *n;
 
-			n = _alloc.allocate(1);
-			_alloc.construct(n,data);
+			// n = _alloc_node.allocate(1);
+			// _alloc.construct(n,data);
 			n->parent = NULL;
 			n->left = NULL;
 			n->right = NULL;
-			n->data = data;
 			n->color = RED;
-			return n;
+			// return n;
+		}
+
+		s_tree<T>*	firstElement()
+		{
+			s_tree<T> *tmp = this->root;
+
+			while (tmp->left)
+				tmp = tmp->left;
+			return tmp;
+		}
+
+		s_tree<T>*	lastElement()
+		{
+			s_tree<T> *tmp = this->root;
+
+			while (tmp->right)
+				tmp = tmp->right;
+			return tmp;
 		}
 
 		s_tree<T>*	search(T data)
@@ -158,9 +175,9 @@ class RBtree
 			tmp->right = p;
 		}
 
-		void insert(T data)
+		void insert(s_tree<T> *n)
 		{
-			s_tree<T> *n = createNode(data);
+			// s_tree<T> *n = createNode(data);
 			addToTree(n);
 
 			s_tree<T> *u;   // uncle 
