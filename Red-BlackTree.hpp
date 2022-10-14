@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/13 13:30:40 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/14 11:57:16 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,54 +24,64 @@ struct s_tree {
 	struct s_tree *parent;
 	struct s_tree *left;
 	struct s_tree *right;
-	T* data;
+	const T		  *data;
 	bool color;
 } ; 
 
-template <class T>
+template <class T , class Allocator /*= std::allocator<s_tree<T> >*/ >
 class RBtree 
 {
 	public :
-
-		RBtree() 
+		
+		typedef Allocator							     allocator_type;
+		typedef	T										 value_type;
+		typedef s_tree<value_type>						 node;
+		typedef typename allocator_type::reference	     reference;
+		typedef typename allocator_type::const_reference const_reference;
+		typedef typename allocator_type::pointer         pointer;
+		typedef typename allocator_type::const_pointer   const_pointer;
+		typedef typename allocator_type::size_type       size_type;
+		typedef typename allocator_type::difference_type difference_type;
+		
+		RBtree(const allocator_type& alloc = allocator_type()) 
 		{
+			_alloc = alloc;
 			this->root = NULL;
-		} 
+		}
 
-		void createNode(s_tree<T> *n)
+		node* createNode(const value_type &data)
 		{
-			// s_tree<T> *n;
+			node *n;
 
-			// n = _alloc_node.allocate(1);
-			// _alloc.construct(n,data);
+			n = _alloc.allocate(1);
+			_alloc.construct(n);
+			n->data = &data;
 			n->parent = NULL;
 			n->left = NULL;
 			n->right = NULL;
 			n->color = RED;
-			// return n;
+			return n;
 		}
-
-		s_tree<T>*	firstElement()
+		node*	firstElement()
 		{
-			s_tree<T> *tmp = this->root;
+			node *tmp = this->root;
 
 			while (tmp->left)
 				tmp = tmp->left;
 			return tmp;
 		}
-
-		s_tree<T>*	lastElement()
+		node*	lastElement()
 		{
-			s_tree<T> *tmp = this->root;
+			node *tmp = this->root;
 
 			while (tmp->right)
 				tmp = tmp->right;
 			return tmp;
 		}
 
-		s_tree<T>*	search(T data)
+		node*	search(const value_type &data)
 		{
-			s_tree<T> *t;
+			node *t;
 
 			t = this->root;
 			while (t)
@@ -86,9 +96,9 @@ class RBtree
 			return NULL;
 		}
 
-		void addToTree(s_tree<T> *n)
+		void addToTree(node *n)
 		{
-			s_tree<T> *tmp;
+			node *tmp;
 
 			tmp = root;
 			if (!tmp)
@@ -125,9 +135,9 @@ class RBtree
 			} 
 		}
 
-		void leftRotation(s_tree<T> *p)
+		void leftRotation(node *p)
 		{
-			s_tree<T> *tmp;
+			node *tmp;
 
 			tmp = p->right;
 			p->right = tmp->left;
@@ -150,9 +160,9 @@ class RBtree
 			tmp->left = p;
 		}
 
-		void	rightRotation(s_tree<T> *p)
+		void	rightRotation(node *p)
 		{
-			s_tree<T> *tmp;
+			node *tmp;
 
 			tmp = p->left;
 			p->left = tmp->right;
@@ -175,13 +185,13 @@ class RBtree
 			tmp->right = p;
 		}
 
-		void insert(s_tree<T> *n)
+		void insert(const value_type &data )
 		{
-			// s_tree<T> *n = createNode(data);
+			node* n = createNode(data);
 			addToTree(n);
 
-			s_tree<T> *u;   // uncle 
-			s_tree<T> *p;   // parent of the current node
+			node *u;   // uncle 
+			node *p;   // parent of the current node
 			bool dir;       // direction of the node acording to the grandPa
 
 			while (n && n != this->root)
@@ -258,10 +268,10 @@ class RBtree
 			if ((this->root)->color == RED)
 				(this->root)->color = BLACK;
 		}
-
-		s_tree<T> *	predeccessor(T data)
+	
+		node *	predeccessor(T data)
 		{
-			s_tree<T> *t,*pred;
+			node *t,*pred;
 
 			// /* predeccessor  of a node is the node with the greatest key 
 			// 	smaller than the key of the current n in Its left subtree
@@ -303,9 +313,9 @@ class RBtree
 			return pred;
 		}
 
-		s_tree<T>*	successor(T data)
+		node*	successor(const value_type  &data)
 		{
-			s_tree<T> *t,*succ;
+			node *t,*succ;
 
 			/* Successor of a node is the node with the smallest key 
 				greater than the key of the current n in Its right subtree
@@ -348,7 +358,7 @@ class RBtree
 		}
 
 
-		void	rebalance(s_tree<T> *n,s_tree<T> *u)
+		void	rebalance(node *n,node *u)
 		{
 			/* 
 				n : the node to be deleted 
@@ -358,8 +368,8 @@ class RBtree
 				d : distant nephew
 			*/
 
-			s_tree<T> *tmp = n; /* saving the deleted node poTer to free at the end */
-			s_tree<T> *p = n->parent;
+			node *tmp = n; /* saving the deleted node poTer to free at the end */
+			node *p = n->parent;
 
 			/* Node being replaced by Its one child */
 			if (u)
@@ -375,7 +385,7 @@ class RBtree
 			else if (!u && n->color == BLACK)
 			{
 				bool dir;
-				s_tree<T> *s,*d,*c;
+				node *s,*d,*c;
 			
 				while (p != NULL)
 				{
@@ -471,9 +481,9 @@ class RBtree
 		}
 
 		/* basic  binary tree deletion */ 
-		void	removeNode(s_tree<T> *n)
+		void	removeNode(node *n)
 		{
-			s_tree<T> *t;
+			node *t;
 			
 			/*	node is  the root */
 			if (n == this->root)
@@ -510,9 +520,9 @@ class RBtree
 			}
 		}
 
-		void	Delete(T data)
+		void	Delete(value_type  &data)
 		{
-			s_tree<T> *tmp;
+			node *tmp;
 			tmp = this->root;
 			while (tmp)
 			{
@@ -528,7 +538,7 @@ class RBtree
 			}
 		}
 
-		void	freeTree(s_tree<T> *root)
+		void	freeTree(node *root)
 		{
 			/* deletion using Preorder traversel */
 			if (root)
@@ -543,7 +553,7 @@ class RBtree
 			return ;
 		}
 
-		void printTreeUtil(s_tree<T> *root, int space)
+		void printTreeUtil(node *root, int space)
 		{
 		
 			if (root == NULL)
@@ -556,7 +566,7 @@ class RBtree
 			std::cout<<std::endl;
 			for (int i = COUNT; i < space; i++)
 				std::cout<<" ";
-			std::cout<<root->data << " " ;
+			std::cout<<root->data->first << " " ;
 			std::cout << root->color<<"\n";
 			printTreeUtil(root->left, space);
 		}
@@ -566,10 +576,10 @@ class RBtree
 			printTreeUtil(this->root, 0);
 		}
 
-		s_tree<T>*	getRoot() {return this->root;}
+		node*	getRoot() {return this->root;}
 
 		private :
-			std::allocator< s_tree<T> > _alloc;
-			s_tree<T> *root;
+			allocator_type _alloc;
+			node *root;
 
 };
