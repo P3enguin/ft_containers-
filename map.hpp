@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/18 09:50:10 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/18 12:33:12 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,15 @@ namespace ft {
 			typedef pair<const key_type, mapped_type>        value_type;
 			typedef Compare									 key_compare;
 			typedef Allocator                                allocator_type;
-			typedef s_tree<value_type>						 node;
+			// typedef s_tree<value_type>						 node;
 			typedef typename allocator_type::reference       reference;
 			typedef typename allocator_type::const_reference const_reference;
 			typedef typename allocator_type::pointer         pointer;
 			typedef typename allocator_type::const_pointer   const_pointer;
 			typedef typename allocator_type::size_type       size_type;
 			typedef typename allocator_type::difference_type difference_type;
-			typedef typename allocator_type::template rebind<node>::other  allocator_node;
-			typedef RBtree<value_type ,allocator_node>		 				RBtree;
+			// typedef typename allocator_type::template rebind<node>::other  allocator_node;
+			// typedef RBtree<value_type ,allocator_node>		 				RBtree;
 			
 	
 		/*-------------------------- Constructors ---------------------------*/
@@ -64,37 +64,7 @@ namespace ft {
 				_tree.insert(val);
 				_tree.printTree();
 			}
-			template<typename P>
-			class iter : public map
-			{
-				public :
-					typedef	P		 value_type;
-					typedef P*		 pointer;
-					typedef P&	     reference;
-					typedef typename std::ptrdiff_t difference_type;
-					typedef typename std::bidirectional_iterator_tag iterator_category;
-
-					iter() {_n = NULL;}
-					iter(node *node) { _n = node; return;}
-					iter(const iter &it) {this->_n = it._n; };
-					
-					const iter &operator=( const iter &it) const
-					{
-						// _n = it._n;
-						return *this;
-					}
-					iter &operator++ () {_n = _tree.successor(_n->data); return *this;}
-				private :
-					node *_n;	
-			};
-
-
 			
-			typedef	  iter<node>			iterator;
-			typedef	  iter<const node>		const_iterator;
-
-			iterator		begin()			{ return iterator( _tree.getRoot());}
-			const_iterator	begin() const	{ return const_iterator(_tree.getRootConst());}
 			// template <class InputIterator>
 			// map (InputIterator first, InputIterator last,
 			// 	const key_compare& comp = key_compare(),
@@ -131,7 +101,7 @@ namespace ft {
 		// const_iterator find (const key_type& k) const;
 
 		private :
-			RBtree _tree;
+			// RBtree _tree;
 			pointer p;
 			allocator_type _alloc ;
 			// allocator_node _alloc_node;
