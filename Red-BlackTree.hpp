@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/18 14:48:18 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/18 18:04:34 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 
 template<class Key,class T>
 struct s_tree {
-
 	typedef ft::pair<const Key,T> value_type;
 
 	struct s_tree *parent;
@@ -33,29 +32,41 @@ struct s_tree {
 	struct s_tree *right;
 	value_type	  *data;
 	bool color;
-} ; 
-// template <class Key,class T>
-// struct RBtree_Iterator 
-// {
-// 	typedef	T	value_type;
-// 	typedef T*	pointer;
-// 	typedef T&  reference;
+} ;
 
-// 	typedef  s_tree<Key,T>*		nodePtr;
-// 	typedef typename std::bidirectional_iterator_tag iterator_category;
-// 	typedef typename std::ptrdiff_t					difference_type;
+/*TODO : add next and prev to every node ,  */
+
+template <class Key,class T>
+struct RBtree_Iterator 
+{
+	typedef ft::pair<const Key,T>	value_type;
+
+	typedef value_type*				pointer;
+	typedef value_type&				reference;
+	typedef	s_tree<Key,T>*			nodePtr;
+
+	typedef	typename std::bidirectional_iterator_tag	iterator_category;
+	typedef	typename std::ptrdiff_t						difference_type;
 
 	
-// 	RBtree_Iterator() : _n(NULL) {};
-// 	RBtree_Iterator(nodePtr n) :_n(n) {};
-// 	RBtree_Iterator(const RBtree_Iterator &rhs): _n(rhs._n) {};
+	RBtree_Iterator() : _n(NULL) {};
+	RBtree_Iterator(nodePtr n) :_n(n) {};
+	RBtree_Iterator(const RBtree_Iterator &rhs): _n(rhs._n) {};
 	
+	RBtree_Iterator &operator=(const RBtree_Iterator &rhs)
+	{
+		_n = rhs._n;
+		return *this;
+	}
 
-// 	nodePtr _n;
+	RBtree_Iterator &operator ++()
+	{
+		
+	}
+	nodePtr _n;
+};
 
-// };
-
-template <class Key,class T,class compare , class Allocator  >
+template <class Key,class T,class compare , class Allocator >
 class RBtree 
 {
 	public :
@@ -66,7 +77,7 @@ class RBtree
 		typedef compare									 key_compare;
 		typedef Allocator							     allocator_type;
 		typedef s_tree<key_type,mapped_type>			 node;
-		// typedef RBtree_Iterator<key_type,mapped>						 Iter;
+		typedef RBtree_Iterator<key_type,mapped_type>	 Iter;
 		typedef typename allocator_type::reference	     reference;
 		typedef typename allocator_type::const_reference const_reference;
 		typedef typename allocator_type::pointer         pointer;
@@ -77,7 +88,8 @@ class RBtree
 
 		
 		RBtree(const allocator_type& alloc = allocator_type(),
-			const allocator_node& node_alloc = allocator_node()) : _data_alloc(alloc),_node_alloc(node_alloc)
+			const allocator_node& node_alloc = allocator_node()) 
+				: _data_alloc(alloc),_node_alloc(node_alloc)
 		{
 			this->root = NULL;
 		}
@@ -96,6 +108,7 @@ class RBtree
 			n->color = RED;
 			return n;
 		}
+
 		node*	firstElement()
 		{
 			node *tmp = this->root;
@@ -120,11 +133,11 @@ class RBtree
 			t = this->root;
 			while (t)
 			{
-				if (!comp(t->data->first,data->first) && !comp(data->first,t->data->first))
+				if (!comp(t->data->first,data.first) && !comp(data.first,t->data->first))
 					return t;
-				else if (!comp(t->data->data,data->first))
+				else if (comp(t->data->data,data.first))
 					t = t->right;
-				else if (!comp(data->first,t->data->first))
+				else if (!comp(t->data->first,data.first))
 					t = t->left;
 			}
 			return NULL;
@@ -143,11 +156,11 @@ class RBtree
 			}
 			while (tmp)
 			{
-				if (!comp(n->data->first,tmp->data->first) && !comp(tmp->data->first,n->data->first))
+				if (!comp(n->data->first,tmp->data->first) 
+						&& !comp(tmp->data->first,n->data->first))
 					return false; // here when two elements are equal 
-				if (!comp(n->data->first,tmp->data->first))
+				if (comp(n->data->first,tmp->data->first))
 				{
-				
 					if (tmp->left == NULL)
 					{
 						n->parent = tmp;
@@ -312,7 +325,7 @@ class RBtree
 				(this->root)->color = BLACK;
 		}
 	
-		node *	predeccessor(T data)
+		node *	predeccessor(value_type *data)
 		{
 			node *t,*pred;
 
@@ -326,14 +339,16 @@ class RBtree
 			pred = NULL;
 			while (t)
 			{
-				if (t->data < data)
+				if (comp(t->data->first, data->first))
 				{
 					pred = t;
 					t = t->right;
 				}
-				else if (t->data > data)
+				else if (!comp(t->data->first,data->first) &&
+					 comp(data->first,t->data->first))
 					t = t->left;
-				else if (t->data == data)
+				else if (!comp(t->data->first,data->first) 
+						&& !comp(data->first,t->data->first))
 				{
 					if (t->left)
 					{
@@ -356,7 +371,7 @@ class RBtree
 			return pred;
 		}
 
-		node*	successor(const value_type  &data)
+		node*	successor(value_type  *data)
 		{
 			node *t,*succ;
 
@@ -371,14 +386,16 @@ class RBtree
 			succ = NULL;
 			while (t)
 			{
-				if (t->data < data)
+				if (comp(t->data->first, data->first))
 					t = t->right;
-				else if (t->data > data)
+				else if (!comp(t->data->first, data->first) 
+					&& comp(data->first,t->data->first))
 				{
 					succ = t;
 					t = t->left;
 				}
-				else if (t->data == data)
+				else if (!comp(t->data->first,data->first) 
+						&& !comp(data->first,t->data->first))
 				{
 					if (t->right)
 					{
@@ -536,7 +553,7 @@ class RBtree
 				_data_alloc.destroy(n->data);
 				_data_alloc.deallocate(n->data,1);
 				_node_alloc.destroy(n);
-				_node_alloc.deallocate(n),1;
+				_node_alloc.deallocate(n,1);
 				n = NULL;
 				return ;
 			}
@@ -558,7 +575,7 @@ class RBtree
 			/* node has two childs */
 			else if (n->left && n->right)
 			{
-				t = pREDecessor(n->data);
+				t = predeccessor(n->data);
 				if (!t)
 					t = successor(n->data);
 				n->data = t->data;
@@ -572,12 +589,13 @@ class RBtree
 			tmp = this->root;
 			while (tmp)
 			{
-				if (tmp->data == data)
+				if (!comp(tmp->data->first,data.first) 
+						&& !comp(data.first,tmp->data->first))
 				{
 					removeNode(tmp);
 					return ;
 				}
-				else if (tmp->data > data)
+				else if (!comp(tmp->data->first, data.first))
 					tmp = tmp->left;
 				else
 					tmp = tmp->right;
@@ -634,7 +652,7 @@ class RBtree
 			allocator_node	_node_alloc;
 			key_compare		comp;
 			node *root;
-			// Iter *it;
+			Iter *it;
 
 };
 
