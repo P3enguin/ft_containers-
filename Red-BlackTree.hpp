@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/14 11:57:16 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/16 13:12:25 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ template <class T , class Allocator /*= std::allocator<s_tree<T> >*/ >
 class RBtree 
 {
 	public :
-		
+
 		typedef Allocator							     allocator_type;
 		typedef	T										 value_type;
 		typedef s_tree<value_type>						 node;
@@ -576,8 +576,10 @@ class RBtree
 			printTreeUtil(this->root, 0);
 		}
 
-		node*	getRoot() {return this->root;}
+		node*		getRoot() const {return this->root;}
+		const node*	getRootConst()  const {return this->root;}
 
+	
 		private :
 			allocator_type _alloc;
 			node *root;

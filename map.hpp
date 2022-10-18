@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/14 11:57:41 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/18 09:50:10 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,43 @@ namespace ft {
 			}
 			void insert(const value_type &val)
 			{
-				p = _alloc.allocate(1);
-				_alloc.construct(p,val);
+				// p = _alloc.allocate(1);
+				// _alloc.construct(p,val);
+
 				_tree.insert(val);
 				_tree.printTree();
 			}
+			template<typename P>
+			class iter : public map
+			{
+				public :
+					typedef	P		 value_type;
+					typedef P*		 pointer;
+					typedef P&	     reference;
+					typedef typename std::ptrdiff_t difference_type;
+					typedef typename std::bidirectional_iterator_tag iterator_category;
+
+					iter() {_n = NULL;}
+					iter(node *node) { _n = node; return;}
+					iter(const iter &it) {this->_n = it._n; };
+					
+					const iter &operator=( const iter &it) const
+					{
+						// _n = it._n;
+						return *this;
+					}
+					iter &operator++ () {_n = _tree.successor(_n->data); return *this;}
+				private :
+					node *_n;	
+			};
+
+
+			
+			typedef	  iter<node>			iterator;
+			typedef	  iter<const node>		const_iterator;
+
+			iterator		begin()			{ return iterator( _tree.getRoot());}
+			const_iterator	begin() const	{ return const_iterator(_tree.getRootConst());}
 			// template <class InputIterator>
 			// map (InputIterator first, InputIterator last,
 			// 	const key_compare& comp = key_compare(),
