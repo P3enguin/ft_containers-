@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/18 18:04:34 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/19 10:12:36 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ struct s_tree {
 	struct s_tree *parent;
 	struct s_tree *left;
 	struct s_tree *right;
+	struct s_tree *prev;
+	struct s_tree *next;
 	value_type	  *data;
 	bool color;
 } ;
@@ -105,6 +107,8 @@ class RBtree
 			n->parent = NULL;
 			n->left = NULL;
 			n->right = NULL;
+			n->prev = NULL;
+			n->next = NULL;
 			n->color = RED;
 			return n;
 		}
@@ -182,6 +186,12 @@ class RBtree
 						tmp = tmp->right;
 				}
 			}
+			n->next = successor(n->data);
+			n->prev = predeccessor(n->data);
+			if (n->prev)
+				n->prev->next = n;
+			if (n->next)
+				n->next->prev = n;
 			return true;
 		}
 
@@ -247,10 +257,9 @@ class RBtree
 				return ;
 			}
 
-			node *u;   // uncle 
-			node *p;   // parent of the current node
-			bool dir;       // direction of the node acording to the grandPa
-
+			node *u;	// uncle 
+			node *p;	// parent of the current node
+			bool dir;	// direction of the node acording to the grandPa
 			while (n && n != this->root)
 			{
 				p = n->parent;
@@ -427,8 +436,9 @@ class RBtree
 				d : distant nephew
 			*/
 
-			node *tmp = n; /* saving the deleted node poTer to free at the end */
-			node *p = n->parent;
+			/* saving the deleted node pointer to free at the end */
+			node *tmp	= n; 
+			node *p 	= n->parent;
 
 			/* Node being replaced by Its one child */
 			if (u)
@@ -546,21 +556,20 @@ class RBtree
 		{
 			node *t;
 			
-			/*	node is  the root */
-			if (n == this->root)
-			{
-				this->root = NULL;
-				_data_alloc.destroy(n->data);
-				_data_alloc.deallocate(n->data,1);
-				_node_alloc.destroy(n);
-				_node_alloc.deallocate(n,1);
-				n = NULL;
-				return ;
-			}
-
 			/*	node is a leaf	*/
 			if (!n->left && !n->right)
+			{
+				if (n == this->root)
+				{
+					_data_alloc.destroy(n->data);
+					_data_alloc.deallocate(n->data,1);
+					_node_alloc.destroy(n);
+					_node_alloc.deallocate(n,1);
+					this->root = NULL;
+					return ;
+				}
 				rebalance(n,NULL);
+			}
 
 			/*	node has only one child */
 			else if (!n->left || !n->right)
@@ -569,16 +578,30 @@ class RBtree
 					t = n->left;
 				else
 					t = n->right;
+				if (n == this->root)
+				{
+					_data_alloc.destroy(n->data);
+					_data_alloc.deallocate(n->data,1);
+					_node_alloc.destroy(n);
+					_node_alloc.deallocate(n,1);
+					t->parent = NULL;
+					this->root = t;
+					return;
+				}
 				rebalance(n,t);
 			}
 
 			/* node has two childs */
 			else if (n->left && n->right)
 			{
+				value_type *dataTmp;
+
+				dataTmp = n->data;
 				t = predeccessor(n->data);
 				if (!t)
 					t = successor(n->data);
 				n->data = t->data;
+				t->data = dataTmp;
 				rebalance(t,NULL);
 			}
 		}
