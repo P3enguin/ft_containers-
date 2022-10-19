@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/19 10:12:36 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/19 12:59:30 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ struct s_tree {
 	bool color;
 } ;
 
-/*TODO : add next and prev to every node ,  */
-
 template <class Key,class T>
 struct RBtree_Iterator 
 {
@@ -61,10 +59,94 @@ struct RBtree_Iterator
 		return *this;
 	}
 
-	RBtree_Iterator &operator ++()
+	pointer operator->()
 	{
-		
+		return _n->data;
 	}
+	
+	RBtree_Iterator operator ++()
+	{
+		_n = _n->next;
+		return *this;
+	}
+
+	RBtree_Iterator operator ++(int)
+	{
+		RBtree_Iterator tmp = *this;
+		_n = _n->next;
+		return tmp;
+	}
+
+	RBtree_Iterator operator--()
+	{
+		_n = _n->prev;
+		return *this;
+	}
+	RBtree_Iterator operator--(int)
+	{
+		RBtree_Iterator tmp = *this;
+		_n = _n->prev;
+		return tmp;
+	}
+	bool operator ==(const RBtree_Iterator& rhs) {  return (_n == rhs._n);}
+	bool operator !=(const RBtree_Iterator& rhs) const { return (_n != rhs._n);}
+	nodePtr _n;
+};
+
+template <class Key,class T>
+struct Const_RBtree_Iterator 
+{
+	typedef ft::pair<const Key,T>	value_type;
+
+	typedef value_type*				pointer;
+	typedef value_type&				reference;
+	typedef	const s_tree<Key,T>*	nodePtr;
+
+	typedef	typename std::bidirectional_iterator_tag	iterator_category;
+	typedef	typename std::ptrdiff_t						difference_type;
+
+	
+	Const_RBtree_Iterator() : _n(NULL) {};
+	Const_RBtree_Iterator(nodePtr n) :_n(n) {};
+	Const_RBtree_Iterator(const Const_RBtree_Iterator &rhs): _n(rhs._n) {};
+	
+	Const_RBtree_Iterator &operator=(const Const_RBtree_Iterator &rhs)
+	{
+		_n = rhs._n;
+		return *this;
+	}
+
+	pointer operator->()
+	{
+		return _n->data;
+	}
+	
+	Const_RBtree_Iterator operator ++()
+	{
+		_n = _n->next;
+		return *this;
+	}
+
+	Const_RBtree_Iterator operator ++(int)
+	{
+		Const_RBtree_Iterator tmp = *this;
+		_n = _n->next;
+		return tmp;
+	}
+
+	Const_RBtree_Iterator operator--()
+	{
+		_n = _n->prev;
+		return *this;
+	}
+	Const_RBtree_Iterator operator--(int)
+	{
+		Const_RBtree_Iterator tmp = *this;
+		_n = _n->prev;
+		return tmp;
+	}
+	bool operator ==(const Const_RBtree_Iterator& rhs) {  return (_n == rhs._n);}
+	bool operator !=(const Const_RBtree_Iterator& rhs) const { return (_n != rhs._n);}
 	nodePtr _n;
 };
 
@@ -88,13 +170,9 @@ class RBtree
 		typedef typename allocator_type::difference_type difference_type;
 		typedef typename allocator_type::template rebind<node>::other  allocator_node;
 
-		
 		RBtree(const allocator_type& alloc = allocator_type(),
 			const allocator_node& node_alloc = allocator_node()) 
-				: _data_alloc(alloc),_node_alloc(node_alloc)
-		{
-			this->root = NULL;
-		}
+				: _data_alloc(alloc),_node_alloc(node_alloc),root(NULL)
 
 		node* createNode(value_type data)
 		{
@@ -250,10 +328,7 @@ class RBtree
 			node* n = createNode(data);
 			if (!addToTree(n))
 			{
-				_data_alloc.destroy(n->data);
-				_data_alloc.deallocate(n->data,1);
-				_node_alloc.destroy(n);
-				_node_alloc.deallocate(n,1);
+				freeNode(n);
 				return ;
 			}
 
@@ -542,10 +617,11 @@ class RBtree
 					tmp->parent->left = NULL;
 				else if (tmp->parent->right == tmp)
 					tmp->parent->right = NULL;
-				_data_alloc.destroy(tmp->data);
-				_data_alloc.deallocate(tmp->data,1);
-				_node_alloc.destroy(tmp);
-				_node_alloc.deallocate(tmp,1);
+				freeNode(tmp);
+				if (tmp->prev)
+					tmp->prev->next = successor(tmp->prev->data);
+				if (tmp->next)
+					tmp->next->prev = predeccessor(tmp->next->data);
 				tmp = NULL;
 			}
 			return ;
@@ -561,10 +637,7 @@ class RBtree
 			{
 				if (n == this->root)
 				{
-					_data_alloc.destroy(n->data);
-					_data_alloc.deallocate(n->data,1);
-					_node_alloc.destroy(n);
-					_node_alloc.deallocate(n,1);
+					freeNode(n);
 					this->root = NULL;
 					return ;
 				}
@@ -580,10 +653,7 @@ class RBtree
 					t = n->right;
 				if (n == this->root)
 				{
-					_data_alloc.destroy(n->data);
-					_data_alloc.deallocate(n->data,1);
-					_node_alloc.destroy(n);
-					_node_alloc.deallocate(n,1);
+					freeNode(n);
 					t->parent = NULL;
 					this->root = t;
 					return;
@@ -634,13 +704,17 @@ class RBtree
 					freeTree(root->left);
 				if (root->right)
 					freeTree(root->right);
-
-				_data_alloc.destroy(root->data);
-				_data_alloc.deallocate(root->data,1);
-				_node_alloc.destroy(root);
-				_node_alloc.deallocate(root,1);
+				freeNode(root);
 			}
 			return ;
+		}
+
+		void	freeNode(node *n)
+		{
+			_data_alloc.destroy(n->data);
+			_data_alloc.deallocate(n->data,1);
+			_node_alloc.destroy(n);
+			_node_alloc.deallocate(n,1);
 		}
 
 		void	printTreeUtil(node *root, int space)
@@ -665,17 +739,18 @@ class RBtree
 		{
 			printTreeUtil(this->root, 0);
 		}
-
+	
+		Iter 		begin(){return Iter(firstElement());};
+		Iter		end() {return Iter(lastElement()->next);}
 		node*		getRoot() const {return this->root;}
 		const node*	getRootConst()  const {return this->root;}
-
 	
 		private :
 			allocator_type	_data_alloc;
 			allocator_node	_node_alloc;
 			key_compare		comp;
 			node *root;
-			Iter *it;
+			// Iter *it;
 
 };
 
