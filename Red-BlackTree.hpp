@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/20 11:14:56 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/20 12:05:18 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,14 +145,13 @@ struct Const_RBtree_Iterator
 	nodePtr _n;
 };
 
-template <class Key,class T,class compare , class Allocator >
+template <class T,class compare , class Allocator >
 class RBtree 
 {
 	public :
 
-		typedef Key										 key_type;
-		typedef T										 mapped_type;
-		typedef ft::pair<const key_type, mapped_type>    value_type;
+
+		typedef T   									value_type;
 		typedef const value_type						 const_value_type;
 		typedef compare									 key_compare;
 		typedef Allocator							     allocator_type;
@@ -240,7 +239,7 @@ class RBtree
 			return NULL;
 		}
 
-		bool addToTree(node *n)
+		ft::pair<Iter,bool> addToTree(node *n)
 		{
 			node *tmp;
 
@@ -255,7 +254,7 @@ class RBtree
 			{
 				if (!comp(n->data->first,tmp->data->first) 
 						&& !comp(tmp->data->first,n->data->first))
-					return false; // here when two elements are equal 
+					return ft::make_pair(Iter(tmp),true); // here when two elements are equal 
 				if (comp(n->data->first,tmp->data->first))
 				{
 					if (tmp->left == NULL)
@@ -285,7 +284,7 @@ class RBtree
 				n->prev->next = n;
 			if (n->next)
 				n->next->prev = n;
-			return true;
+			return ft::make_pair(Iter(tmp),true);
 		}
 
 		void leftRotation(node *p)

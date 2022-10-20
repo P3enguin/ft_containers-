@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/18 12:33:12 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/20 12:03:58 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,8 @@ namespace ft {
 			typedef typename allocator_type::size_type       size_type;
 			typedef typename allocator_type::difference_type difference_type;
 			// typedef typename allocator_type::template rebind<node>::other  allocator_node;
-			// typedef RBtree<value_type ,allocator_node>		 				RBtree;
-			
-	
+			typedef RBtree<value_type ,key_compare,allocator_type>		 		RBtree;
+		
 		/*-------------------------- Constructors ---------------------------*/
 
 			explicit map (const key_compare& comp = key_compare(),
@@ -56,14 +55,14 @@ namespace ft {
 				_size = 0;
 				_capacity = 0;
 			}
-			void insert(const value_type &val)
-			{
-				// p = _alloc.allocate(1);
-				// _alloc.construct(p,val);
+			// void insert(const value_type &val)
+			// {
+			// 	// p = _alloc.allocate(1);
+			// 	// _alloc.construct(p,val);
 
-				_tree.insert(val);
-				_tree.printTree();
-			}
+			// 	_tree.insert(val);
+			// 	_tree.printTree();
+			// }
 			
 			// template <class InputIterator>
 			// map (InputIterator first, InputIterator last,
@@ -80,14 +79,18 @@ namespace ft {
 			
 
 		/*--------------------------- Iterators ------------------------------*/
+		
+			typedef typename RBtree::Iter						iterator;
+			typedef typename RBtree::const_Iter					const_iterator;
 
+			iterator		begin()	{return _tree.begin();} 
+			iterator		end()	{ return _tree.end();}
 
 		/*---------------------------- Modifiers ----------------------------*/
 
-		// pair<iterator,bool> insert (const value_type& val)
-		// {
-			
-		// }
+		pair<iterator,bool> insert (const value_type& val)
+					{ return (_tree.insert(val)); }
+					
 		// iterator insert (iterator position, const value_type& val){}
 		// template <class InputIterator>  void insert (InputIterator first, 
 		// 		InputIterator last){}
@@ -101,7 +104,7 @@ namespace ft {
 		// const_iterator find (const key_type& k) const;
 
 		private :
-			// RBtree _tree;
+			RBtree _tree;
 			pointer p;
 			allocator_type _alloc ;
 			// allocator_node _alloc_node;

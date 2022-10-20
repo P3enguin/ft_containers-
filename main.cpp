@@ -6,10 +6,11 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 11:52:40 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/20 11:07:21 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/20 11:39:20 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "map.hpp"
 #include <map>
 #include <iostream>
 
@@ -19,14 +20,19 @@
 int main()
 {	
 
-		std::map<int,char> a;
-		a.insert(std::pair<int,char>(1,'a'));
-		a.insert(std::pair<int,char>(2,'b'));
-		std::map<int,char>::iterator it;
+		ft::map<int,char> a;
+		a.insert(ft::pair<int,char>(1,'a'));
+		a.insert(ft::pair<int,char>(2,'b'));
+		ft::map<int,char>::iterator it;
 
 
-		it = a.end();
-		std::cout << (*it).first << std::endl;
+		// it = a.begin();
+		// while (it != a.end())
+		// {
+		// 	std::cout << it->first << std::endl;
+		// 	it++;
+		// }
+		// ft::cout << (*it).first << std::endl;
 		// const std::pair<int,char> hh(1,'a');
 		// a.insert(hh);
 		// a.insert(std::pair<int,char>(2,'a'));
