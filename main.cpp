@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 11:52:40 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/21 14:25:14 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/21 14:44:42 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,23 +32,25 @@ int main()
 		a.insert(ft::pair<int,char>(5,'b'));
 		a.insert(ft::pair<int,char>(6,'a'));
 		a.insert(ft::pair<int,char>(7,'b'));
-		
-
-		b.insert(a.begin(),a.end());
-		// a.insert(ft::pair<int,char>(8,'a'));
-		a.insert(it,ft::make_pair(8,'c'));
-		a.insert(ft::pair<int,char>(9,'b'));
-		b.insert(a.begin(),a.end());
-		b.erase(4);
-		it = b.begin();
-		it++;
-		b.erase(it,b.end());
-
-		// b.getTree().printTree();
-		a.getTree().printTree();
-		a.clear();
+		a[7] = 'h';
 		std::cout << " size " << a.getTree().getSize() << std::endl;
-		// std::cout << a.empty() << std::endl;
+
+		// b.insert(a.begin(),a.end());
+		// // a.insert(ft::pair<int,char>(8,'a'));
+		// a.insert(it,ft::make_pair(8,'c'));
+		// a.insert(ft::pair<int,char>(9,'b'));
+		// b.insert(a.begin(),a.end());
+		// b.erase(4);
+		// it = b.begin();
+		// it++;
+		// b.erase(it,b.end());
+
+		// // b.getTree().printTree();
+		a.getTree().printTree();
+		// a.clear();
+		
+		std::cout << a.max_size() << std::endl;
+		std::cout << a.empty() << std::endl;
 
 
 

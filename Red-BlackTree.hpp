@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/21 14:24:48 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/21 14:34:25 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -771,7 +771,10 @@ class RBtree
 		void	clear()
 		{
 			for (Iter it = begin();it != end(); it++)
+			{
+				this->_size--;
 				freeNode(it._n);
+			}
 			this->root = NULL;
 		}
 
@@ -820,17 +823,18 @@ class RBtree
 		{
 			printTreeUtil(this->root, 0);
 		}
-	
+
 		key_compare getKeyComp() const { return comp;}
 		node*		getRoot() const {return this->root;}
 		size_type	getSize() const {return this->_size;}
-	
+		allocator_type getAllocator () const { return this->_data_alloc;}
+
 		private :
 			allocator_type	_data_alloc;
 			allocator_node	_node_alloc;
 			key_compare		comp;
 			size_type		_size;
-			node *root;
+			node 			*root;
 };
 
 #endif

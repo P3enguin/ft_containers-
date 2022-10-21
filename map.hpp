@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/21 14:15:04 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/21 14:43:53 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ namespace ft {
 				return true;
 			return false;
 		}
+		size_type size() const { return _tree.getSize();}
+		size_type max_size() const { return _tree.getAllocator().max_size();}
 
 		/*--------------------------- Iterators ------------------------------*/
 		
@@ -134,6 +136,12 @@ namespace ft {
 		{
 			_tree.clear();
 		}
+		/*------------------------- element accessors ---------------------*/
+		mapped_type& operator[] (const key_type& k)
+		{
+			return ((*(this->_tree.insert(make_pair(k,mapped_type()),NULL)).first).second);
+		}
+
 		/*----------------------------- Searching -------------------------*/
 		
 		iterator find (const key_type& k)
