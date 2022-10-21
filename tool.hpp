@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:38:02 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/18 10:07:08 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/21 10:15:21 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <iostream>
 #include <string>
 #include <typeinfo>
-#include "Red-BlackTree.hpp"
+
 
 /***************************** iterator_traits *******************************/
 
@@ -616,8 +616,6 @@ namespace ft
 	}
 }
 
-
-/*************** Bidirectional Operator *********************/
 
 
 #endif
