@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/21 14:34:25 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/21 16:44:06 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,6 +236,26 @@ class RBtree
 			return tmp;
 		}
 
+		Iter lower_bound(const key_type &k)
+		{
+			node *t;
+
+			t = search(k);
+
+			if (t && !comp(t->data->first,k))
+				return Iter(t);
+			return end();
+		}
+
+		Iter upper_bound(const key_type &k)
+		{
+			node *t;
+
+			t = search(k);
+			if (t && t->next && !comp(k,t->data->first))
+				return Iter(t->next);
+			return end();
+		}
 		/*------------------- search -----------------*/
 		node*	search(const key_type &data)
 		{

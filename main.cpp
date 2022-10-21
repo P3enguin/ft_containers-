@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 11:52:40 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/21 14:44:42 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/21 16:44:33 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int main()
 		a.getTree().printTree();
 		// a.clear();
 		
-		std::cout << a.max_size() << std::endl;
+		std::cout << a.lower_bound(6)->first << std::endl;
 		std::cout << a.empty() << std::endl;
 
 

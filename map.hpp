@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/21 14:43:53 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/21 15:38:04 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,9 +156,11 @@ namespace ft {
 			return 0;
 		}
 
-		 iterator lower_bound (const key_type& k);
+		iterator lower_bound (const key_type& k){ return _tree.lower_bound(k); }
 		// const_iterator lower_bound (const key_type& k) const;
 		
+		iterator upper_bound (const key_type& k) { return _tree.upper_bound(k); }
+		// const_iterator upper_bound (const key_type& k) const;
 		/*----------------------------- observers -------------------------*/
 		key_compare key_comp() const { return _tree.getKeyComp();}
 		value_compare value_comp() const { return value_compare(_tree.getKeyComp()); }
