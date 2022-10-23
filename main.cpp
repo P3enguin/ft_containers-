@@ -6,21 +6,19 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 11:52:40 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/23 10:55:14 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/23 16:39:31 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "map.hpp"
-#include <map>
-#include <iostream>
+
 
 // #include "Vector.hpp"
-// #include "map.hpp"
+#include "map.hpp"
 
 int main()
 {	
 
-		 ft::map<int,char> a;
+		ft::map<int,char> a;
 		// ft::map<int,char> b;
 		// ft::map<int,char>::iterator it;
 
@@ -56,10 +54,13 @@ int main()
     	{
         	a.insert(ft::make_pair(i,'a'));
      	}
+		ft::map<int,char>::iterator it ;
+
 		
-		for (int i = 0 ; i < 100000 ;i++)
+		for ( it = a.begin() ; it !=  a.end() ;it++)
 		{
-			a.erase(i);	
+			std::cout << "it " << it->first << std::endl;
+			a.erase(it);	
 		}
 		
 }

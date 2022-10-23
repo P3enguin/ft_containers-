@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/23 10:53:35 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/23 16:40:45 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ struct RBtree_Iterator
 		return _n->data;
 	}
 	
-	RBtree_Iterator operator ++()
+	RBtree_Iterator &operator ++()
 	{
 		_n = _n->next;
 		return *this;
@@ -87,7 +87,7 @@ struct RBtree_Iterator
 		return tmp;
 	}
 
-	RBtree_Iterator operator--()
+	RBtree_Iterator &operator--()
 	{
 		_n = _n->prev;
 		return *this;
@@ -135,15 +135,18 @@ class RBtree
 	
 		RBtree(const allocator_type& alloc = allocator_type(),
 			const allocator_node& node_alloc = allocator_node()) 
-				: _data_alloc(alloc),_node_alloc(node_alloc),root(NULL),_size(0){};
-		
+				: _data_alloc(alloc),_node_alloc(node_alloc),root(NULL),_size(0)
+				{
+					_end = createNode(value_type());
+				};
+		~RBtree(){freeNode(_end);} 
 		/*------------------- iterators -----------------*/
 
 		Iter 		begin()       {	return Iter(firstElement());};
 		const_Iter  begin() const {return const_Iter(firstElement());}
 
-		Iter		end() {return Iter(lastElement()->next);}
-		const_Iter	end() const {return const_Iter(lastElement()->next);}
+		Iter		end() {return Iter(_end);}
+		const_Iter	end() const {return const_Iter(_end);}
 
 		
 
@@ -515,7 +518,7 @@ class RBtree
 
 			*/
 			t = this->root;
-			succ = NULL;
+			succ = this->_end;
 			while (t)
 			{
 				if (comp(t->data->first, data->first))
@@ -665,11 +668,11 @@ class RBtree
 					tmp->parent->left = NULL;
 				else if (tmp->parent->right == tmp)
 					tmp->parent->right = NULL;
-				freeNode(tmp);
 				if (tmp->prev)
-					tmp->prev->next = successor(tmp->prev->data);
+					tmp->prev->next = successor(tmp->data);
 				if (tmp->next)
-					tmp->next->prev = predeccessor(tmp->next->data);
+					tmp->next->prev = predeccessor(tmp->data);
+				freeNode(tmp);
 				tmp = NULL;
 			}
 			return ;
@@ -815,6 +818,7 @@ class RBtree
 			key_compare		comp;
 			size_type		_size;
 			node 			*root;
+			node			*_end;
 };
 
 #endif
