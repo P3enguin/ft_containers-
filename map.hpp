@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/21 15:38:04 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/23 09:59:51 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,13 @@ namespace ft {
 		
 			typedef typename RBtree::Iter						iterator;
 			typedef typename RBtree::const_Iter					const_iterator;
+			
 
-			iterator		begin()	{return _tree.begin();} 
-			iterator		end()	{ return _tree.end();}
+			iterator		begin()		  {return _tree.begin();} 
+			const_iterator	begin() const {return _tree.begin();}
+
+			iterator		end()			{ return _tree.end();}
+			const_iterator	end() const		{return _tree.end();}
 
 		/*---------------------------- Modifiers ----------------------------*/
 

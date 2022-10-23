@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/18 14:41:23 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/10/22 09:20:11 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ namespace ft {
                 _vec_ptr = NULL;
                 _size = 0;
                 _capacity = 0;
-                _max_size = 768614336404564650;
+                _max_size = _alloc.max_size();
             }
 
             explicit vector (size_type n, const value_type& val = value_type(),
@@ -84,7 +84,7 @@ namespace ft {
             {
                 _size = n;
                 _capacity = n;
-                _max_size = 768614336404564650;
+                _max_size = _alloc.max_size();;
                 _vec_ptr = _alloc.allocate(_capacity);
                 for (size_type i = 0; i < _size ; i++ )
                     _alloc.construct(_vec_ptr + i,val);    
@@ -101,7 +101,7 @@ namespace ft {
 
                 _size     = n;
                 _capacity = n;
-                _max_size = 768614336404564650;
+                _max_size = _alloc.max_size();
                 _vec_ptr = _alloc.allocate(_capacity);
                 while (first != last)
                 {
