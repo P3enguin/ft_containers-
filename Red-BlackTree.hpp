@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/23 16:40:45 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/08 10:41:37 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <string>
 #include <unistd.h>
 #include "tool.hpp"
+#include <stdio.h>
 # define RED   1
 # define BLACK 0
 # define LEFT  0
@@ -38,7 +39,7 @@ struct s_tree {
 };
 
 /*------------------------------ Iterator Structure -------------------------*/
-template <class T,class N>
+template <class T, class N>
 struct RBtree_Iterator 
 {
 	typedef T 						value_type;
@@ -49,21 +50,27 @@ struct RBtree_Iterator
 	typedef	typename std::bidirectional_iterator_tag	iterator_category;
 	typedef	typename std::ptrdiff_t						difference_type;
 
-	typedef	N				nodePtr;
+	typedef	N				nodeType;
+	typedef	N*				nodePtr;			
 	
-	RBtree_Iterator() : _n(NULL) {};
-	RBtree_Iterator(nodePtr n) :_n(n) {};
-	RBtree_Iterator(const RBtree_Iterator &rhs): _n(rhs._n) {};
+	RBtree_Iterator() { _n = NULL; };
+	RBtree_Iterator( nodePtr node) {  _n = node ;};
 
-	RBtree_Iterator &operator=(const RBtree_Iterator &rhs)
+	RBtree_Iterator( const RBtree_Iterator &rhs) {_n = rhs._n ;};
+
+	operator RBtree_Iterator< value_type , const nodeType >() const {
+		return RBtree_Iterator<value_type  ,const nodeType >(_n);
+	}
+
+	RBtree_Iterator &operator=(const RBtree_Iterator &rhs) 
 	{
 		if (*this != rhs)
 		{
-			this->_n = rhs._n;
+			_n = rhs._n;
 		}
 		return *this;
 	}
-	
+
 	reference operator*() const
 	{
 		return *_n->data;
@@ -110,7 +117,6 @@ class RBtree
 {
 	public :
 
-
 		typedef Key                                      key_type;
 		typedef T                                        mapped_type;
 		typedef ft::pair<const key_type, mapped_type>    value_type;
@@ -120,9 +126,8 @@ class RBtree
 
 	
 		typedef s_tree<value_type>						 node;
-		typedef const s_tree<value_type>				 const_node;
-		typedef RBtree_Iterator<value_type,node* >		 Iter;
-		typedef RBtree_Iterator<value_type,const node*  >		 const_Iter;
+		typedef RBtree_Iterator<value_type,node >		 Iter;
+		typedef RBtree_Iterator<value_type , const node > const_Iter;
 		typedef typename allocator_type::reference	     reference;
 		typedef typename allocator_type::const_reference const_reference;
 		typedef typename allocator_type::pointer         pointer;
@@ -143,7 +148,7 @@ class RBtree
 		/*------------------- iterators -----------------*/
 
 		Iter 		begin()       {	return Iter(firstElement());};
-		const_Iter  begin() const {return const_Iter(firstElement());}
+		const_Iter  begin() const { return const_Iter(firstElement());}
 
 		Iter		end() {return Iter(_end);}
 		const_Iter	end() const {return const_Iter(_end);}
@@ -167,7 +172,7 @@ class RBtree
 			return n;
 		}
 
-		node*	firstElement()
+		node*	firstElement() const
 		{
 			node *tmp = this->root;
 			if (!tmp)
@@ -177,18 +182,6 @@ class RBtree
 				tmp = tmp->left;
 			return tmp;
 		}
-
-		const_node* firstElementConst()
-		{
-			const_node tmp = this->root;
-			if (!tmp)
-				return NULL;
-
-			while (tmp->left)
-				tmp = tmp->left;
-			return tmp;
-		}
-
 
 		node*	lastElement()
 		{

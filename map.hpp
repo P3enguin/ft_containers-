@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/23 09:59:51 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/08 10:38:38 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ namespace ft {
 		/*--------------------------- capacity ------------------------------*/
 		bool empty() const
 		{
-			std::cout << "size " << _tree.getSize() << std::endl;
 			if (_tree.getSize() == 0)
 				return true;
 			return false;
@@ -152,7 +151,12 @@ namespace ft {
 		{
 		 	return iterator(_tree.search(k));
 		}
-		// const_iterator find (const key_type& k) const;
+
+		const_iterator find (const key_type& k) const
+		{
+			return const_iterator(_tree.search(k));
+		}
+
 		size_type count (const key_type& k) const
 		{
 			if (_tree.count(k))
@@ -161,10 +165,17 @@ namespace ft {
 		}
 
 		iterator lower_bound (const key_type& k){ return _tree.lower_bound(k); }
-		// const_iterator lower_bound (const key_type& k) const;
+		const_iterator lower_bound (const key_type& k) const
+		{
+			return _tree.lower_bound(k);
+		}
 		
 		iterator upper_bound (const key_type& k) { return _tree.upper_bound(k); }
-		// const_iterator upper_bound (const key_type& k) const;
+		const_iterator upper_bound (const key_type& k) const
+		{
+			return _tree.upper_bound(k);
+		}
+
 		/*----------------------------- observers -------------------------*/
 		key_compare key_comp() const { return _tree.getKeyComp();}
 		value_compare value_comp() const { return value_compare(_tree.getKeyComp()); }
