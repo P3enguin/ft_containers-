@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 11:52:40 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/08 10:42:22 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/08 16:00:45 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,7 @@ int main()
 {	
 
 		ft::map<int,char> a;
-
-
-		ft::map<int,char>::const_iterator it ;
 		
-		it = a.begin();
 
 		
 
@@ -58,17 +54,30 @@ int main()
 		// std::cout << a.lower_bound(6)->first << std::endl;
 		// std::cout << a.empty() << std::endl;
 
-		// for (int i = 0 ; i < 100000 ; i++)
-    	// {
-        // 	a.insert(ft::make_pair(i,'a'));
-     	// }
-		// ft::map<int,char>::iterator it ;
+		ft::map<int,char>::iterator it ;
+		for (int i = 0 ; i < 10 ; i++)
+    	{
+			a.insert(ft::make_pair(i,'a'));
+     	}
+	
+		it = a.begin() ;
 
+
+		while (it != a.end())
+		{
+			std::cout << " it " << it->first << std::endl;
+			if (it._n->next)
+			{
+				std::cout << "next " << it._n->next->data->first << std::endl;
+
+			}
+			if (it._n->prev)
+			{
+				std::cout << "prev " << it._n->prev->data->first << std::endl;
 		
-		// for ( it = a.begin() ; it !=  a.end() ;it++)
-		// {
-		// 	std::cout << "it " << it->first << std::endl;
-		// 	a.erase(it);	
-		// }
+			}
+			a.erase(it);
+			it++;
+		}
 		
 }

@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/08 10:41:37 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/08 15:58:52 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,9 @@ struct RBtree_Iterator
 	RBtree_Iterator() { _n = NULL; };
 	RBtree_Iterator( nodePtr node) {  _n = node ;};
 
-	RBtree_Iterator( const RBtree_Iterator &rhs) {_n = rhs._n ;};
+	RBtree_Iterator( const RBtree_Iterator &rhs) :_n(rhs._n)
+	{
+	};
 
 	operator RBtree_Iterator< value_type , const nodeType >() const {
 		return RBtree_Iterator<value_type  ,const nodeType >(_n);
@@ -64,10 +66,7 @@ struct RBtree_Iterator
 
 	RBtree_Iterator &operator=(const RBtree_Iterator &rhs) 
 	{
-		if (*this != rhs)
-		{
-			_n = rhs._n;
-		}
+		_n = rhs._n;
 		return *this;
 	}
 
@@ -89,7 +88,8 @@ struct RBtree_Iterator
 
 	RBtree_Iterator operator ++(int)
 	{
-		RBtree_Iterator tmp = *this;
+		RBtree_Iterator tmp(*this);
+		
 		_n = _n->next;
 		return tmp;
 	}
@@ -153,7 +153,6 @@ class RBtree
 		Iter		end() {return Iter(_end);}
 		const_Iter	end() const {return const_Iter(_end);}
 
-		
 
 		node* createNode(value_type data)
 		{
@@ -183,12 +182,12 @@ class RBtree
 			return tmp;
 		}
 
-		node*	lastElement()
+		node*	lastElement() const
 		{
 			node *tmp = this->root;
 			if (!tmp)
 				return NULL;
-			
+
 			while (tmp->right)
 				tmp = tmp->right;
 			return tmp;
@@ -495,7 +494,6 @@ class RBtree
 						break;
 				}
 			}
-			
 			return pred;
 		}
 
@@ -661,10 +659,6 @@ class RBtree
 					tmp->parent->left = NULL;
 				else if (tmp->parent->right == tmp)
 					tmp->parent->right = NULL;
-				if (tmp->prev)
-					tmp->prev->next = successor(tmp->data);
-				if (tmp->next)
-					tmp->next->prev = predeccessor(tmp->data);
 				freeNode(tmp);
 				tmp = NULL;
 			}
@@ -675,7 +669,7 @@ class RBtree
 		void	removeNode(node *n)
 		{
 			node *t;
-			
+
 			/*	node is a leaf	*/
 			if (!n->left && !n->right)
 			{
@@ -746,7 +740,7 @@ class RBtree
 
 		void	clear()
 		{
-			for (Iter it = begin();it != end(); it++)
+			for (Iter it = begin(); it != end(); it++)
 			{
 				this->_size--;
 				freeNode(it._n);
