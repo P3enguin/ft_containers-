@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 11:52:40 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/09 11:19:52 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/09 13:15:33 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,21 +54,17 @@ int main()
 		// std::cout << a.lower_bound(6)->first << std::endl;
 		// std::cout << a.empty() << std::endl;
 		ft::map<int,char> a;
-		ft::map<int,char>::iterator it ;
-		for (int i = 0 ; i < 10000000 ; i++)
+		ft::map<int,char>::reverse_iterator it ;
+		for (int i = 0 ; i < 10; i++)
     	{
 			a.insert(ft::make_pair(i,'a'));
      	}
-	
-		it = a.begin() ;
+		it = a.rbegin();
 
-
-		while (it != a.end())
+		while (it != a.rend())
 		{
-			std::cout << " it " << it->first << std::endl;
-			a.erase(it);
+			std::cout << it->first << std::endl;
 			it++;
 		}
-		std::cout << "size " << a.size() << std::endl;
-		
+	
 }
