@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/08 15:58:52 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/09 11:17:21 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -671,6 +671,10 @@ class RBtree
 			node *t;
 
 			/*	node is a leaf	*/
+			if (n->prev)
+				n->prev->next = n->next;
+			if (n->next)
+				n->next->prev = n->prev;
 			if (!n->left && !n->right)
 			{
 				this->_size--;
