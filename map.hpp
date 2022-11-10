@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/09 18:40:55 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/10 11:33:56 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,34 +35,33 @@ namespace ft {
 			typedef pair<const key_type, mapped_type>        					value_type;
 			typedef Compare									 					key_compare;
 			typedef Allocator                                					allocator_type;
+
 			typedef typename allocator_type::reference       					reference;
 			typedef typename allocator_type::const_reference 					const_reference;
 			typedef typename allocator_type::pointer         					pointer;
 			typedef typename allocator_type::const_pointer   					const_pointer;
 			typedef typename allocator_type::size_type      					size_type;
 			typedef typename allocator_type::difference_type 					difference_type;
+
 			typedef RBtree<key_type,mapped_type ,key_compare,allocator_type>	RBtree;
 		
 		/*-------------------------- Constructors ---------------------------*/
 
 			explicit map (const key_compare& comp = key_compare(),
-				const allocator_type& alloc = allocator_type()) : _comp(comp),_alloc(alloc)
-				{
-				}
+				const allocator_type& alloc = allocator_type()) 
+				: _comp(comp),_alloc(alloc)
+				{}
 			
 			template <class InputIterator>
 			map (InputIterator first, InputIterator last,
 				const key_compare& comp = key_compare(),
-				const allocator_type& alloc = allocator_type()): _comp(comp),_alloc(alloc)
-			{
-				insert(first,last);
-			}
+				const allocator_type& alloc = allocator_type())
+				: _comp(comp),_alloc(alloc) {insert(first,last); }
 
 			map (const map& x)
 			{
-				_comp = x.key_comp();
+				_comp  = x.key_comp();
 				_alloc = x._alloc;
-				// copy assignment operator takes care of deep copy in the tree ;
 				insert(x.begin(),x.end());
 			}
 
@@ -89,8 +88,9 @@ namespace ft {
 				return true;
 			return false;
 		}
-		size_type size() const { return _tree.getSize();}
-		size_type max_size() const { return _tree.getAllocator().max_size();}
+
+		size_type size     () 	const { return _tree.getSize();}
+		size_type max_size ()	const { return _tree.getAllocator().max_size();}
 
 		/*--------------------------- Iterators ------------------------------*/
 		
@@ -101,17 +101,17 @@ namespace ft {
 			typedef typename RBtree::const_reverse_iterator		const_reverse_iterator;
 			
 
-			iterator		begin()		  {return _tree.begin();} 
-			const_iterator	begin() const {return _tree.begin();}
+			iterator		begin()		  	{ return _tree.begin();} 
+			const_iterator	begin() const 	{ return _tree.begin();}
 
 			iterator		end()			{ return _tree.end();}
-			const_iterator	end() const		{return _tree.end();}
+			const_iterator	end() const		{ return _tree.end();}
 
-			reverse_iterator rbegin()		{return _tree.rbegin();}
+			reverse_iterator rbegin()		{ return _tree.rbegin();}
+			reverse_iterator rend  ()		{ return _tree.rend();}
+
 			const_reverse_iterator rbegin() const { return _tree.rbegin();}
-
-			reverse_iterator rend()			{return _tree.rend();}
-			const_reverse_iterator rend() const { return _tree.rend();}
+			const_reverse_iterator rend  () const { return _tree.rend();}
 
 		/*---------------------------- Modifiers ----------------------------*/
 
@@ -131,10 +131,7 @@ namespace ft {
 			};
 		}
 
-		void erase (iterator position)
-		{
-			_tree.removeNode(position._n);
-		}
+		void erase (iterator position) { _tree.removeNode(position._n); }
 
 		size_type erase (const key_type& k)
 		{
@@ -150,21 +147,12 @@ namespace ft {
 				_tree.removeNode(first._n);
 				first++;
 			}
-			
 		}
 
-		void swap (map& x)
-		{
-			map tmp = x;
-			
-			x._tree = _tree;
-			_tree = tmp._tree;
-		}
+		void swap (map& x) { _tree.swap(x._tree); }
 
-		void	clear()
-		{
-			_tree.clear();
-		}
+		void	clear() { _tree.clear(); }
+
 		/*------------------------- element accessors ---------------------*/
 		mapped_type& operator[] (const key_type& k)
 		{
@@ -173,13 +161,9 @@ namespace ft {
 
 		/*----------------------------- Searching -------------------------*/
 		
-		iterator find (const key_type& k)
-		{
-		 	return iterator(_tree.search(k));
-		}
+		iterator find (const key_type& k) { return iterator(_tree.search(k)); }
 
-		const_iterator find (const key_type& k) const
-		{
+		const_iterator find (const key_type& k) const {
 			return const_iterator(_tree.search(k));
 		}
 
@@ -190,35 +174,43 @@ namespace ft {
 			return 0;
 		}
 
-		iterator lower_bound (const key_type& k){ return iterator(_tree.lower_bound(k)); }
+		iterator 		lower_bound (const key_type& k)
+		{ 
+			return iterator(_tree.lower_bound(k)); 
+		}
 		const_iterator lower_bound (const key_type& k) const
 		{
 			return const_iterator(_tree.lower_bound(k));
 		}
 		
-		iterator upper_bound (const key_type& k) { return iterator(_tree.upper_bound(k)); }
+		iterator 		upper_bound (const key_type& k) 
+		{
+			return iterator(_tree.upper_bound(k));
+		}
+
 		const_iterator upper_bound (const key_type& k) const
 		{
 			return const_iterator(_tree.upper_bound(k));
 		}
 
-		pair<const_iterator,const_iterator> equal_range (const key_type& k) const
-		{
-			return ft::make_pair(lower_bound(k),upper_bound(k));
-		}
 		pair<iterator,iterator>             equal_range (const key_type& k){
 			return ft::make_pair(lower_bound(k),upper_bound(k));
 		}
-		/*----------------------------- observers -------------------------*/
-		key_compare key_comp() const { return _comp;}
-		value_compare value_comp() const { return value_compare(_comp); }
 
-		RBtree &getTree(){ return this->_tree;};
+		pair<const_iterator,const_iterator>	equal_range (const key_type& k) const
+		{
+			return ft::make_pair(lower_bound(k),upper_bound(k));
+		}
+
+		/*----------------------------- getters -------------------------*/
+		key_compare 	key_comp  () const { return _comp;}
+		value_compare 	value_comp() const { return value_compare(_comp);}
+		RBtree			&getTree  () const { return this->_tree;}
+
 		private :
-			RBtree _tree;
-			key_compare _comp;
+			RBtree 			_tree;
+			key_compare 	_comp;
 			allocator_type _alloc;
-
 	};
 }
 
