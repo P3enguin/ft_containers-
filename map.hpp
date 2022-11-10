@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/10 11:33:56 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/10 11:35:28 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,7 @@ namespace ft {
 		/*----------------------------- getters -------------------------*/
 		key_compare 	key_comp  () const { return _comp;}
 		value_compare 	value_comp() const { return value_compare(_comp);}
-		RBtree			&getTree  () const { return this->_tree;}
+		RBtree			&getTree  ()	   { return this->_tree;}
 
 		private :
 			RBtree 			_tree;
