@@ -1,83 +1,72 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map.hpp                                            :+:      :+:    :+:   */
+/*   set.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/11 12:54:44 by ybensell         ###   ########.fr       */
+/*   Created: 2022/11/11 08:42:28 by ybensell          #+#    #+#             */
+/*   Updated: 2022/11/11 10:09:09 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAP_HPP
-#define MAP_HPP
+#ifndef SET_HPP
+#define SET_HPP
 
-#include <map>
-#include <string>
-#include <iostream>
-#include "Red-BlackTree.hpp"
 #include "tool.hpp"
+#include <set>
 
-namespace ft {
+template <class Key, class Compare = less<Key>,
+          class Allocator = allocator<Key>>
+class set
+{
+    typedef Key                                      key_type;
+    typedef key_type                                 value_type;
+    typedef Compare                                  key_compare;
+    typedef key_compare                              value_compare;
+    typedef Allocator                                allocator_type;
+    typedef typename allocator_type::reference       reference;
+    typedef typename allocator_type::const_reference const_reference;
+    typedef typename allocator_type::size_type       size_type;
+    typedef typename allocator_type::difference_type difference_type;
+    typedef typename allocator_type::pointer         pointer;
+    typedef typename allocator_type::const_pointer   const_pointer;
 
-	template <
-		class Key,
-		class T,
-		class Compare = std::less<Key>,
-		class Allocator = std::allocator< ft::pair<const Key, T> >
-			>
-	class map 
-	{
-		public :
-			typedef Key                                      					key_type;
-			typedef T                                        					mapped_type;
-			typedef pair<const key_type, mapped_type>        					value_type;
-			typedef Compare									 					key_compare;
-			typedef Allocator                                					allocator_type;
+    typedef RBtree<key_type,mapped_type ,key_compare,allocator_type>	RBtree;
+    /*-------------------------- Constructors ---------------------------*/
 
-			typedef typename allocator_type::reference       					reference;
-			typedef typename allocator_type::const_reference 					const_reference;
-			typedef typename allocator_type::pointer         					pointer;
-			typedef typename allocator_type::const_pointer   					const_pointer;
-			typedef typename allocator_type::size_type      					size_type;
-			typedef typename allocator_type::difference_type 					difference_type;
-
-			typedef RBtree<key_type,mapped_type ,key_compare,allocator_type>	RBtree;
-		
-		/*-------------------------- Constructors ---------------------------*/
-
-			explicit map (const key_compare& comp = key_compare(),
+			explicit set (const key_compare& comp = key_compare(),
 				const allocator_type& alloc = allocator_type()) 
-				: _comp(comp),_alloc(alloc),_tree(_comp,_alloc)
+				: _comp(comp),_alloc(alloc), _tree(_comp,_alloc)
 				{}
 			
 			template <class InputIterator>
-			map (InputIterator first, InputIterator last,
+			set (InputIterator first, InputIterator last,
 				const key_compare& comp = key_compare(),
 				const allocator_type& alloc = allocator_type())
-				: _comp(comp),_alloc(alloc),_tree(_comp,_alloc) 
+				: _comp(comp), _alloc(alloc),_tree(_comp,_alloc) 
 				{ 
 					insert(first,last);
 				}
 
-			map (const map& x) : _alloc(x._alloc),_comp(x._comp),_tree(_comp,_alloc) 
-			{
+			set (const set& x): _alloc(x._alloc),_comp(x._comp)
+                                ,_tree(_comp,_alloc) {
 				insert(x.begin(),x.end());
-			}
+		    }
 
-			map& operator= (const map& x)
+            set& operator= (const set& x)
 			{
 				clear();
 				insert(x.begin(),x.end());
 				return *this;
 			}
 
-		~map(){}
+		~set(){}
+
 		class value_compare
       	 : public std::binary_function<value_type, value_type, bool>
 		{
-			friend class map<Key,T,Compare,Allocator>;
+			friend class set<Key,T,Compare,Allocator>;
 			protected:
 			Compare comp;
 		
@@ -138,7 +127,7 @@ namespace ft {
 				first++;
 			};
 		}
- 
+
 		void erase (iterator position) { _tree.removeNode(position._n); }
 
 		size_type erase (const key_type& k)
@@ -152,20 +141,14 @@ namespace ft {
 		{
 			while (first != last)
 			{
-				erase(first);
+				_tree.removeNode(first._n);
 				first++;
 			}
 		}
 
-		void swap (map& x) { _tree.swap(x._tree); }
+		void swap (set& x) { _tree.swap(x._tree); }
 
 		void	clear() { _tree.clear(); }
-
-		/*------------------------- element accessors ---------------------*/
-		mapped_type& operator[] (const key_type& k)
-		{
-			return ((*(this->_tree.insert(make_pair(k,mapped_type()),NULL)).first).second);
-		}
 
 		/*----------------------------- Searching -------------------------*/
 		
@@ -219,7 +202,11 @@ namespace ft {
 			key_compare 	_comp;
 			allocator_type _alloc;
 			RBtree 			_tree;
-	};
-}
+};
+    
 
 #endif
+
+
+
+

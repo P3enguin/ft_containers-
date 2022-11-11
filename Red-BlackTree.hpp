@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/10 11:27:48 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/11 14:45:59 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <string>
 #include <unistd.h>
 #include "tool.hpp"
+#include <stdio.h>
 
 # define RED   1
 # define BLACK 0
@@ -200,25 +201,17 @@ class RBtree
 		typedef typename allocator_type::template rebind<node>::other  	allocator_node;
 
 		/*------------------- constructor -----------------*/
-	
-		RBtree (const key_compare& cmp = key_compare() ,
-				const allocator_type& alloc = allocator_type(),
+
+		RBtree (const key_compare& cmp ,
+				const allocator_type& alloc ,
 				const allocator_node& node_alloc = allocator_node()) 
 				: _data_alloc(alloc),_node_alloc(node_alloc),comp(cmp),root(NULL),_size(0)
 				{ _end = createNode(value_type()); }
-	
+
 		/*------------------- Destructor -----------------*/
 		~RBtree()
 		{
-			node *tmp;
-			node *f = firstElement();
-
-			while (f && f != _end)
-			{
-				tmp = f->next;
-				freeNode(f);
-				f = tmp;
-			};
+			freeTree(root);
 			freeNode(_end);
 		}
 
@@ -394,6 +387,7 @@ class RBtree
 			node *tmp;
 
 			tmp = pos;
+			
 			if (!tmp)
 			{
 				n->color = BLACK;
@@ -408,6 +402,10 @@ class RBtree
 					return ft::make_pair(Iter(tmp),false);
 				if (comp(n->data->first,tmp->data->first))
 				{
+					// protecting when Inserting by specific position
+					// if (tmp->parent && comp(n->data->first,tmp->parent->data->first))
+					// 	return ft::make_pair(Iter(search(tmp->data->first)),
+					// 	false);
 					if (tmp->left == NULL)
 					{
 						n->parent = tmp;
@@ -417,8 +415,12 @@ class RBtree
 					else 
 						tmp = tmp->left;
 				}
-				else
+				else if (!comp(n->data->first,tmp->data->first))
 				{
+					// protecting when Inserting by specific position
+					// if (tmp->parent && !comp(n->data->first,tmp->parent->data->first))
+					// 	return ft::make_pair(Iter(search(tmp->data->first)),
+					// 	false);
 					if (tmp->right == NULL)
 					{
 						n->parent = tmp;
@@ -433,8 +435,7 @@ class RBtree
 			n->prev = predeccessor(n->data);
 			if (n->prev)
 				n->prev->next = n;
-			if (n->next)
-				n->next->prev = n;
+			n->next->prev = n;
 			this->_size++;
 			return ft::make_pair(Iter(tmp),true);
 		}
@@ -853,8 +854,9 @@ class RBtree
 
 		void	freeNode(node *n)
 		{
-			if (n)
+			if (n )
 			{
+				std::cout << "node to be deleted " << n->data->first << std::endl;
 				_data_alloc.destroy(n->data);
 				_data_alloc.deallocate(n->data,1);
 				_node_alloc.destroy(n);
