@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/12 09:57:55 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/12 13:12:02 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ namespace ft {
 			typedef typename allocator_type::size_type      					size_type;
 			typedef typename allocator_type::difference_type 					difference_type;
 
-			typedef RBtree<key_type,mapped_type ,key_compare,allocator_type>	RBtree;
+			typedef RBtree<key_type,value_type ,key_compare,allocator_type>	RBtree;
 		
 		/*-------------------------- Constructors ---------------------------*/
 
@@ -124,14 +124,14 @@ namespace ft {
 		/*---------------------------- Modifiers ----------------------------*/
 
 		pair<iterator,bool> insert (const value_type& val)
-			{ return (_tree.insert(val,NULL)); }
+			{ return (_tree.insert(val.first,val,NULL)); }
 					
 		iterator insert (iterator position, const value_type& val) {
 				iterator it;
 				it = find(val.first);
 				if (it != end())
 					return it;
-				return (_tree.insert(val,position._n).first); 
+				return (_tree.insert(val.first,val,position._n).first); 
 		}
 	
 		template <class InputIterator>
@@ -139,7 +139,7 @@ namespace ft {
 		{
 			while (first != last)
 			{
-				_tree.insert(*first._n->data,NULL);
+				_tree.insert(first._n->key,*first._n->data,NULL);
 				first++;
 			};
 		}
@@ -169,7 +169,7 @@ namespace ft {
 		/*------------------------- element accessors ---------------------*/
 		mapped_type& operator[] (const key_type& k)
 		{
-			return ((*(this->_tree.insert(make_pair(k,mapped_type()),NULL)).first).second);
+			return ((*(this->_tree.insert(k,make_pair(k,mapped_type()),NULL)).first).second);
 		}
 
 		/*----------------------------- Searching -------------------------*/
@@ -218,6 +218,7 @@ namespace ft {
 		/*----------------------------- getters -------------------------*/
 		key_compare 	key_comp  () const { return _comp;}
 		value_compare 	value_comp() const { return value_compare(_comp);}
+		allocator_type get_allocator() const	{ return _alloc; };
 		RBtree			&getTree  ()	   { return this->_tree;}
 
 		private :

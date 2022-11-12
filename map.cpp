@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 13:39:07 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/12 09:59:49 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/12 13:39:42 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int main()
 {
     ft::map<int,char> map;
     ft::map<int,char>::iterator it;
-     ft::map<int,char>::reverse_iterator ir;
+    ft::map<int,char>::reverse_iterator ir;
     for (int i = 0 ; i <= 7 ; i++)
         map.insert(ft::make_pair(i,i));
 
@@ -139,7 +139,7 @@ int main()
     std::cout <<  "equal range of 1 first elem : " << map.equal_range(1).first->second << std::endl;
     std::cout <<  "equal range of 1 first elem : " << map.equal_range(2).first->first << std::endl;
      std::cout <<  "equal range of 1 first elem : " << map.equal_range(2).first->second << std::endl;
-
+    while (1);
     
 }
 

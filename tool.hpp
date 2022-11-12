@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:38:02 by ybensell          #+#    #+#             */
-/*   Updated: 2022/10/21 10:15:21 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/12 11:34:17 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -552,7 +552,7 @@ namespace ft
 		first_type	first;
 		second_type	second;
 
-		pair() :first(),second(){}
+		pair() :first(),second() {}
 
 		template<class U, class V> 
 		pair (const pair<U, V>& pr) : first(pr.first),second(pr.second){}
