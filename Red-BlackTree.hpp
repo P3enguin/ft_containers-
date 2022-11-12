@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/11 14:45:59 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/12 09:59:24 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -856,7 +856,6 @@ class RBtree
 		{
 			if (n )
 			{
-				std::cout << "node to be deleted " << n->data->first << std::endl;
 				_data_alloc.destroy(n->data);
 				_data_alloc.deallocate(n->data,1);
 				_node_alloc.destroy(n);

@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/11 12:54:44 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/12 09:57:55 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,13 @@ namespace ft {
 		pair<iterator,bool> insert (const value_type& val)
 			{ return (_tree.insert(val,NULL)); }
 					
-		iterator insert (iterator position, const value_type& val)
-			{ return (_tree.insert(val,position._n).first); }
+		iterator insert (iterator position, const value_type& val) {
+				iterator it;
+				it = find(val.first);
+				if (it != end())
+					return it;
+				return (_tree.insert(val,position._n).first); 
+		}
 	
 		template <class InputIterator>
 		void insert (InputIterator first, InputIterator last)
