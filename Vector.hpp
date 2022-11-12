@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/08 16:20:01 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/12 17:44:40 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,8 @@ namespace ft {
                size_type i = 0;
     
                 _size     = x._size;
-                _capacity = x._capacity;
+                if (_capacity < x._capacity)
+                    _capacity = x._capacity;
                 _max_size = x._max_size;
                 _vec_ptr = _alloc.allocate(_capacity);
                 while (i < _size)
@@ -186,7 +187,7 @@ namespace ft {
                          _alloc.destroy(tmp + i);
                     _alloc.deallocate(tmp,_size);
                     _size = n;
-                    _capacity = n;
+                    _capacity = _capacity * 2;
                 }
                 else if ( n > _size && n < _capacity)
                 {
@@ -430,12 +431,11 @@ namespace ft {
 
                 for (i = 0; i < diff ; i++)
                     _alloc.construct(_vec_ptr + i ,tmp[i]);
-                for (j = 0 ; j < n ; j++)
+                for (j = 0 ; j < n + 1 ; j++)
                 {
                     _alloc.construct(_vec_ptr + i + j , *first);
                     first++;
                 }
-                i++;
                 while (i < _size )
                 {
                     _alloc.construct(_vec_ptr + i + j, tmp[i]);
