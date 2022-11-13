@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/12 17:44:40 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/13 10:04:00 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -346,15 +346,11 @@ namespace ft {
                 diff = position.getIter() - _vec_ptr ;
                 if (_size + 1 > _capacity)
                     _vec_ptr = _alloc.allocate(_capacity * 2);
+                for (i = _size ; i > diff ; i--)
+                    _alloc.construct(_vec_ptr + i, tmp[i - 1]);
                 for (i = 0; i < diff ; i++)
                     _alloc.construct(_vec_ptr + i ,tmp[i]);
                 _alloc.construct(_vec_ptr + i ,val);
-                i++;
-                while (i < _size)
-                {
-                    _alloc.construct(_vec_ptr + i, tmp[i]);
-                    i++;
-                }
                 if (_size + 1  > _capacity)
                 {
                     for (i = 0; i < _size ; i++ )
@@ -418,37 +414,42 @@ namespace ft {
                 size_type alloc_nbr;
                 T* tmp  = _vec_ptr;
                 
-                n = last - first;
-                diff =  position  - _vec_ptr;
-                if (_size + n + 1 > _capacity)
+                n = last - first; // nbr of element to be inserted ;
+                diff = position.getIter() - _vec_ptr;
+                if (_size + n + 1 <= _capacity) // overlap
+                {
+                    difference_type end =  _size - 1 ;
+                    for (i = _size  + n - 1 ; end >= diff ; i--,end--)
+                        _alloc.construct(_vec_ptr + i , *(_vec_ptr + end));
+                    for (i = 0 ; i < n ; i++,first++)
+                        _alloc.construct(_vec_ptr + diff + i,*first);
+                    
+                }
+                else if (_size + n + 1 > _capacity)
                 {
                     if (_size + n + 1 <= _capacity * 2)
                         alloc_nbr = _capacity * 2;
                     else
                         alloc_nbr = _size + n;
                     _vec_ptr = _alloc.allocate(alloc_nbr);
-                }
-
-                for (i = 0; i < diff ; i++)
-                    _alloc.construct(_vec_ptr + i ,tmp[i]);
-                for (j = 0 ; j < n + 1 ; j++)
-                {
-                    _alloc.construct(_vec_ptr + i + j , *first);
-                    first++;
-                }
-                while (i < _size )
-                {
-                    _alloc.construct(_vec_ptr + i + j, tmp[i]);
-                    i++;
-                }
-                if (_size + n + 1  > _capacity)
-                {
-                    for (i = 0; i < _size ; i++ )
-                         _alloc.destroy(tmp + i);
-                    _alloc.deallocate(tmp,_size);
-                    _capacity = alloc_nbr;
-                }
-                _size += n;
+                    for (i = 0; i < diff ; i++)
+                        _alloc.construct(_vec_ptr + i ,tmp[i]);
+                    for (j = 0 ; j < n + 1 ; j++)
+                    {
+                        _alloc.construct(_vec_ptr + i + j , *first);
+                        first++;
+                    }
+                    while (i < _size )
+                    {
+                        _alloc.construct(_vec_ptr + i + j, tmp[i]);
+                        i++;
+                    }
+                        for (i = 0; i < _size ; i++ )
+                            _alloc.destroy(tmp + i);
+                        _alloc.deallocate(tmp,_size);
+                        _capacity = alloc_nbr;
+                    }
+                    _size += n; 
             }
 
             iterator erase (iterator position)
