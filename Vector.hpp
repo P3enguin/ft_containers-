@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/13 13:16:47 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/13 16:47:34 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ namespace ft {
                size_type i = 0;
 
                 clear();
-                _alloc.destroy(_vec_ptr);
+                _alloc.deallocate(_vec_ptr,_capacity);
                 _size     = x._size;
                 if (_capacity < x._capacity)
                     _capacity = x._capacity;
@@ -279,23 +279,17 @@ namespace ft {
                                 InputIterator>::type  first, InputIterator last)
             {
                 difference_type diff;
-                
-                //try diff in size_type;
+ 
                 diff = last - first;
+                clear();
                 if (diff > _capacity)
                 {
-                    for (size_type i = 0; i < _capacity; i++)
-                        _alloc.destroy(_vec_ptr + i);
                     _alloc.deallocate(_vec_ptr,_capacity);
                     _capacity = diff;
                    _vec_ptr = _alloc.allocate(_capacity);
                 }
                 if (diff <= _capacity)
-                {
                     _size = diff;
-                    for (size_type i = 0 ;i < _capacity; i++)
-                            _alloc.destroy(_vec_ptr + i);
-                }
                 for (difference_type i = 0; i < diff; i++)
                 {
                     _alloc.construct(_vec_ptr + i, *first);
@@ -309,7 +303,7 @@ namespace ft {
 
                 if (_size == _capacity)
                 {
-                    if (_capacity == 0)
+                    if (empty())
                         _capacity += 1;
                     else
                         _capacity = _capacity * 2;
@@ -359,12 +353,12 @@ namespace ft {
             void insert (iterator position, size_type n, const value_type& val)
             {
                 size_type i = 0;
-                size_type j = 0;
                 T* tmp  = _vec_ptr;
                 difference_type diff;
                 size_type alloc_nbr;
 
                 diff = position.getIter() - _vec_ptr ;
+
                 if (_size + n + 1 > _capacity)
                 {
                     if (_size + n + 1 <= _capacity * 2)
@@ -373,16 +367,13 @@ namespace ft {
                         alloc_nbr = _size + n;
                     _vec_ptr = _alloc.allocate(alloc_nbr);
                 }
-                for (i = 0; i < diff ; i++)
+                for (i = _size + n - 1; i >= diff + n ; i--)
+                    _alloc.construct(_vec_ptr + i ,tmp[i - n]);
+               for (i = 0; i < diff ; i++)
                     _alloc.construct(_vec_ptr + i ,tmp[i]);
-                while (j < n)
+                while (i < diff + n)
                 {
-                    _alloc.construct(_vec_ptr + i + j ,val);
-                    j++;
-                }
-                while (i < _size)
-                {
-                    _alloc.construct(_vec_ptr + i + j , tmp[i]);
+                    _alloc.construct(_vec_ptr + i  , val);
                     i++;
                 }
                 if (_size + n + 1  > _capacity)
@@ -406,7 +397,7 @@ namespace ft {
                 size_type j;
                 size_type alloc_nbr;
                 T* tmp  = _vec_ptr;
-                
+
                 n = last - first; // nbr of element to be inserted ;
                 diff = position.getIter() - _vec_ptr;
                 if (_size + n + 1 <= _capacity) // overlap
@@ -451,7 +442,7 @@ namespace ft {
                 difference_type n;
                 T *tmp = _vec_ptr;
 
-                n = position - _vec_ptr;
+                n = position.getIter() - _vec_ptr;
                 _vec_ptr = _alloc.allocate(_capacity);
                 for (i = 0; i < n ; i++)
                     _alloc.construct(_vec_ptr + i,tmp[i]);
@@ -529,7 +520,7 @@ namespace ft {
 
             void clear()
             {
-                for (size_type i = 0 ; i < _capacity - 1 ; i++)
+                for (size_type i = 0 ; i < _capacity ; i++)
                     _alloc.destroy(_vec_ptr + i);
                 _size = 0;
             }

@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 13:21:17 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/10 14:57:51 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/13 16:54:01 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ int main()
     else if (st < sp )
         std::cout << "st small than sp " << std::endl;
            
-
+    std::cout << sp.top() << std::endl;
     
 }
