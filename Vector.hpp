@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/13 10:04:00 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/13 13:16:47 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,20 +71,15 @@ namespace ft {
             
             /************************* Constructors **************************/
             
-            explicit vector (const allocator_type & alloc = allocator_type())
-            {
-                _vec_ptr = NULL;
-                _size = 0;
-                _capacity = 0;
-                _max_size = _alloc.max_size();
-            }
+            explicit vector (const allocator_type & alloc = allocator_type()) 
+                        :_vec_ptr(NULL),_size(0),_capacity(0),_alloc(alloc)
+                        {  _max_size = _alloc.max_size(); }
 
             explicit vector (size_type n, const value_type& val = value_type(),
-                const allocator_type& alloc = allocator_type()) : _alloc(alloc)
+                const allocator_type& alloc = allocator_type()) : _alloc(alloc),
+                _size(n),_capacity(n)
             {
-                _size = n;
-                _capacity = n;
-                _max_size = _alloc.max_size();;
+                _max_size = _alloc.max_size();
                 _vec_ptr = _alloc.allocate(_capacity);
                 for (size_type i = 0; i < _size ; i++ )
                     _alloc.construct(_vec_ptr + i,val);    
@@ -97,9 +92,9 @@ namespace ft {
                     const allocator_type& alloc = allocator_type()) : _alloc(alloc)
             {
                 size_type i = 0;
-                size_type n = last - first;
+                difference_type n = last - first;
 
-                _size     = n;
+                _size = n; 
                 _capacity = n;
                 _max_size = _alloc.max_size();
                 _vec_ptr = _alloc.allocate(_capacity);
@@ -115,9 +110,9 @@ namespace ft {
             {
                 size_type i = 0;
 
-                _size     = x._size;
-                _capacity = x._capacity;
-                _max_size = x._max_size;
+                _size     = x.size();
+                _capacity = x.capacity();
+                _max_size = x.max_size();
                 _vec_ptr = _alloc.allocate(_capacity);
                 while (i < _size)
                 {
@@ -129,7 +124,9 @@ namespace ft {
             vector& operator= (const vector& x)
             {
                size_type i = 0;
-    
+
+                clear();
+                _alloc.destroy(_vec_ptr);
                 _size     = x._size;
                 if (_capacity < x._capacity)
                     _capacity = x._capacity;
@@ -165,12 +162,12 @@ namespace ft {
             size_type capacity() const { return _capacity;}
 
             bool empty() const { if (_size == 0) return 1 ; return 0;}
-
+            
             void resize (size_type n, value_type val = value_type())
             {
                 if (n < _size)
                 {
-                    for (int i = n ; i < _capacity ;i++ )
+                    for (size_type i = n ; i < _capacity ;i++ )
                         _alloc.destroy(_vec_ptr + i);
                     _size = n;
                 }
@@ -178,8 +175,13 @@ namespace ft {
                 {   
                     size_type i = 0;
                     T *tmp = _vec_ptr;
+
+                    if (n > _capacity * 2)
+                        _capacity = n;
+                    else
+                        _capacity = _capacity * 2;
                     _vec_ptr = _alloc.allocate(n);
-                    for (i = 0;i < _size ; i++)
+                    for (i = 0; i < _size ; i++)
                         _alloc.construct(_vec_ptr + i ,tmp[i]);
                     for (i = n - _size;i < n ; i++)
                         _alloc.construct(_vec_ptr + i , val);
@@ -187,7 +189,6 @@ namespace ft {
                          _alloc.destroy(tmp + i);
                     _alloc.deallocate(tmp,_size);
                     _size = n;
-                    _capacity = _capacity * 2;
                 }
                 else if ( n > _size && n < _capacity)
                 {
@@ -225,7 +226,7 @@ namespace ft {
                             {       reference &tmp = _vec_ptr[n]; return tmp; }
 
             const_reference operator[] (size_type n) const  
-                            { const reference &tmp = _vec_ptr[n]; return tmp; }
+                            { const_reference &tmp = _vec_ptr[n]; return tmp; }
 
             reference       at (size_type n)
             {
@@ -238,24 +239,21 @@ namespace ft {
             {
                 if (n >= _size)
                     throw std::out_of_range("Out of range");
-                const reference &tmp = _vec_ptr[n];
+                const_reference &tmp = _vec_ptr[n];
                 return tmp;
             }
 
-            // front and end should be tested !!!!!!
-
             reference       front()     
-                            {       reference &tmp = _vec_ptr[0]; return tmp; }
+                            { return _vec_ptr[0];}
 
             const_reference front() const
-                            { const reference &tmp = _vec_ptr[0]; return tmp; }
-
+                            { return _vec_ptr[0];}
 
             reference        back()  
                           { reference &tmp = _vec_ptr[_size - 1]; return tmp; }
 
             const_reference  back() const
-                    { const reference &tmp = _vec_ptr[_size - 1]; return tmp; }
+                    { const_reference &tmp = _vec_ptr[_size - 1]; return tmp; }
 
             /*******************************************************************/
             
@@ -263,20 +261,15 @@ namespace ft {
             
             void assign (size_type n, const value_type& val)
             {
+                clear();
                 if (n > _capacity)
                 {
-                    for (size_type i = 0; i < _capacity; i++)
-                        _alloc.destroy(_vec_ptr + i);
                     _alloc.deallocate(_vec_ptr,_capacity);
                     _capacity = n;
                    _vec_ptr = _alloc.allocate(_capacity);
                 }
                 if (n <= _capacity)
-                {
-                   _size = n;
-                    for (size_type i = 0; i < _capacity; i++)
-                            _alloc.destroy(_vec_ptr + i);
-                }
+                    _size = n;
                 for (size_type i = 0; i < n; i++)
                     _alloc.construct(_vec_ptr + i, val);
             }
@@ -536,8 +529,7 @@ namespace ft {
 
             void clear()
             {
-                size_type i;
-                for (i = _size - 1 ; i > _size; i--)
+                for (size_type i = 0 ; i < _capacity - 1 ; i++)
                     _alloc.destroy(_vec_ptr + i);
                 _size = 0;
             }

@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:38:02 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/12 11:34:17 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/13 12:59:04 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,12 @@ class iter
 	/*---------------------------- Constructors -----------------------------*/
 
 		iter () {};
-		iter (P * ptr) {_iter = ptr;}
+		iter (pointer  ptr) {_iter = ptr;}
 		iter (const iter<P> &obj) {_iter = obj._iter; };
-
+		
+		operator iter <const P>() const {
+				return iter<const P> (_iter);
+		}
 		iter<P> &operator  = (const iter<P> &obj){ _iter = obj._iter;
 													return *this ;};
  
@@ -164,15 +167,15 @@ class iter
 		difference_type operator -(const iter<P> &obj) 
 			{ return (std::distance(obj.getIter(),this->_iter)) ;};
 
-		P & operator  *()       { return *_iter ;};
-		P & operator  *() const { return *_iter ;};
-		P * operator ->()       { return *_iter ;};
+		reference operator  *()       { return *_iter ;};
+		reference operator  *() const { return *_iter ;};
+		pointer  operator ->()       { return *_iter ;};
 
 		//getter for _iter pointer 
-		P * getIter() const {return _iter;};
+		pointer  getIter() const {return _iter;};
 
 	protected :
-		P *_iter;  /* this is the pointer that track my iterator since, 
+		pointer _iter;  /* this is the pointer that track my iterator since, 
 					random access iterators are more like an arrays */
 };    
 
