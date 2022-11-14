@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/14 11:41:53 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/14 16:42:57 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ namespace ft {
 			typedef typename allocator_type::size_type      					size_type;
 			typedef typename allocator_type::difference_type 					difference_type;
 
-			typedef RBtree<key_type,value_type ,key_compare,allocator_type>	RBtree;
+			typedef RBtree<key_type,value_type ,key_compare,allocator_type>		RBtree;
 		
 		/*-------------------------- Constructors ---------------------------*/
 
@@ -188,22 +188,43 @@ namespace ft {
 		}
 
 		iterator 		lower_bound (const key_type& k)
-		{ 
-			return iterator(_tree.lower_bound(k)); 
+		{
+			for (iterator it = begin() ; it != end() ; it++)
+			{
+				if (it->first >= k)
+					return it;
+			}
+			return end();
 		}
+
 		const_iterator lower_bound (const key_type& k) const
 		{
-			return const_iterator(_tree.lower_bound(k));
+			for (const_iterator it = begin() ; it != end() ; it++)
+			{
+				if (it->first >= k)
+					return it;
+			}
+			return end();
 		}
 		
 		iterator 		upper_bound (const key_type& k) 
 		{
-			return iterator(_tree.upper_bound(k));
+			for (iterator it = begin() ; it != end() ; it++)
+			{
+				if (it->first > k)
+					return it;
+			}
+			return end();
 		}
 
 		const_iterator upper_bound (const key_type& k) const
 		{
-			return const_iterator(_tree.upper_bound(k));
+			for (const_iterator it = begin() ; it != end() ; it++)
+			{
+				if (it->first > k)
+					return it;
+			}
+			return end();
 		}
 
 		pair<iterator,iterator>             equal_range (const key_type& k){

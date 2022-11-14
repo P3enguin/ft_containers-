@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:57:14 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/14 11:56:35 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/14 15:08:04 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,26 +212,6 @@ class RBtree
 			return tmp;
 		}
 
-		node*	lower_bound(const key_type &k)
-		{
-			node *t; 
-
-			t = search(k);
-			if (t && !_comp(t->key,k))
-				return t;
-			return _end;
-		}
-
-		node* upper_bound(const key_type &k)
-		{
-			node *t;
-
-			t = search(k);
-			if (t && t->next && !_comp(k,t->key))
-				return t->next;
-			return  _end;
-		}
-
 		/*------------------- search -----------------*/
 
 		node*	search(const key_type &data)
@@ -372,7 +352,6 @@ class RBtree
 			this->_size++;
 			return ft::make_pair(Iter(tmp),true);
 		}
-
 
 		void insertBalancing(node *n)
 		{

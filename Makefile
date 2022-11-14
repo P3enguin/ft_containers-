@@ -6,12 +6,15 @@
 #    By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/11 09:01:37 by ybensell          #+#    #+#              #
-#    Updated: 2022/11/14 11:39:16 by ybensell         ###   ########.fr        #
+#    Updated: 2022/11/14 16:18:13 by ybensell         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME = container
+
+STL = stl
+STL_SRC = stl.cpp
 
 SRC = main.cpp
 
@@ -37,6 +40,9 @@ clean :
 	$(RM) $(OBJ)
 
 fclean : clean
-	$(RM) $(NAME)
+	$(RM) $(NAME) $(STL)
+
+stl : 
+	$(CC) $(CPPFLAGS) $(STL_SRC) -o $(STL)
 
 re : fclean all

@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 12:54:18 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/13 16:53:09 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/14 14:26:32 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,19 +85,19 @@ namespace ft {
     template <class T, class Container>
     bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
     {
-        return (!(rhs.c > lhs.c));
+        return (rhs.c <= lhs.c);
     }
 
     template <class T, class Container>
     bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
     {
-        return ((lhs <= rhs));
+        return (lhs.c > rhs.c);
     }
         
     template <class T, class Container>
     bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
     {
-        return (!(lhs < rhs));
+        return (lhs.c >= rhs.c);
     }
 }
 

@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 08:42:28 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/12 13:14:57 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/14 16:44:47 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ namespace ft {
 							insert(first,last);
 						}
 
-					set (const set& x) : _alloc(x._alloc),_comp(x._comp),_tree(_comp,_alloc) 
+					set (const set& x) : _comp(x._comp),_alloc(x._alloc),_tree(_comp,_alloc) 
 					{
 						insert(x.begin(),x.end());
 					}
@@ -101,14 +101,14 @@ namespace ft {
 				/*---------------------------- Modifiers ----------------------------*/
 
 				pair<iterator,bool> insert (const value_type& val)
-					{ return (_tree.insert(val,NULL)); }
+					{ return (_tree.insert(val,val,NULL)) ;}
 							
 				iterator insert (iterator position, const value_type& val) {
 						iterator it;
-						it = find(val.first);
+						it = find(val);
 						if (it != end())
 							return it;
-						return (_tree.insert(val,position._n).first); 
+						return (_tree.insert(val,val,position._n).first); 
 				}
 			
 				template <class InputIterator>
@@ -154,31 +154,27 @@ namespace ft {
 					return 0;
 				}
 
-				iterator 		lower_bound (const key_type& k)
-				{ 
-					return iterator(_tree.lower_bound(k)); 
-				}
-				const_iterator lower_bound (const key_type& k) const
+				iterator 		lower_bound (const key_type& k) 
 				{
-					return const_iterator(_tree.lower_bound(k));
-				}
-				
-				iterator 		upper_bound (const key_type& k) 
-				{
-					return iterator(_tree.upper_bound(k));
+					for (iterator it = begin() ; it != end() ; it++)
+					{
+						if (*it >= k)
+							return it;
+					}
+					return end();
 				}
 
-				const_iterator upper_bound (const key_type& k) const
+				iterator 		upper_bound (const key_type& k)  
 				{
-					return const_iterator(_tree.upper_bound(k));
+					for (iterator it = begin() ; it != end() ; it++)
+					{
+						if (*it > k)
+							return it;
+					}
+					return end();
 				}
 
 				pair<iterator,iterator>             equal_range (const key_type& k){
-					return ft::make_pair(lower_bound(k),upper_bound(k));
-				}
-
-				pair<const_iterator,const_iterator>	equal_range (const key_type& k) const
-				{
 					return ft::make_pair(lower_bound(k),upper_bound(k));
 				}
 
