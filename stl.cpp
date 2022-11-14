@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/14 13:44:46 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/14 16:52:35 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/14 17:38:30 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,18 +71,18 @@ void set_tests()
     std::cout << "inserting one element in set" << std::endl;
     std::cout << "size before insert : " << set.size() << std::endl;
     set.insert(set.begin(),7);
-    std::cout << "size after insert" << set.size() << std::endl;
+    std::cout << "size after insert : " << set.size() << std::endl;
 	breakFunc();
     std::cout << "inserting range of element that already exists" << std::endl;
 	breakFunc();
     std::cout << "size before insert : " << set.size() << std::endl;
     set.insert(set.begin(),set.end());
-    std::cout << "size after insert" << set.size() << std::endl;
+    std::cout << "size after insert :" << set.size() << std::endl;
 	breakFunc();
     std::cout << "inserting a range of copySet" << std::endl;
     std::cout << "size before insert : " << set.size() << std::endl;
     set.insert(copySet.begin(),copySet.end());
-    std::cout << "size after insert" << set.size() << std::endl;
+    std::cout << "size after insert : " << set.size() << std::endl;
 	breakFunc();
     for ( it = set.begin() ; it != set.end() ; it++)
         std::cout << "first : "  << *it <<  std::endl;
@@ -210,18 +210,18 @@ void map_tests()
     std::cout << "inserting one element in map" << std::endl;
     std::cout << "size before insert : " << map.size() << std::endl;
     map.insert(map.begin(),std::make_pair(7,'c'));
-    std::cout << "size after insert" << map.size() << std::endl;
+    std::cout << "size after insert : " << map.size() << std::endl;
 	breakFunc();
     std::cout << "inserting range of element that already exists" << std::endl;
 	breakFunc();
     std::cout << "size before insert : " << map.size() << std::endl;
     map.insert(map.begin(),map.end());
-    std::cout << "size after insert" << map.size() << std::endl;
+    std::cout << "size after insert : " << map.size() << std::endl;
 	breakFunc();
     std::cout << "inserting a range of copyMap" << std::endl;
     std::cout << "size before insert : " << map.size() << std::endl;
     map.insert(copyMap.begin(),copyMap.end());
-    std::cout << "size after insert" << map.size() << std::endl;
+    std::cout << "size after insert : " << map.size() << std::endl;
 	breakFunc();
     for ( it = map.begin() ; it != map.end() ; it++)
         std::cout << "first : "  << it->first << "   second : " << it->second << std::endl;
@@ -331,7 +331,7 @@ void vec_tests()
 	std::vector<int> Copyvec(vec);
 	std::cout << "size of copyvec: " << Copyvec.size() << "     capacity : " << Copyvec.capacity() << std::endl;
 	breakFunc();
-	std::cout << "testing whetere the two vector are equals or not " << std::endl;
+	std::cout << "testing if the two vector are equals or not " << std::endl;
 	if (Copyvec == vec)
 		std::cout << "the two vec are equals" << std::endl;
 	else
@@ -375,15 +375,15 @@ void vec_tests()
 	breakFunc();
 	vec.resize(5);
 	std::cout << "size : " << vec.size() << "     capacity : " << vec.capacity() << std::endl;
-	std::cout << "reserving a capacity of 11 to vec" << std::endl;
-	vec.reserve(11);
+	std::cout << "reserving a capacity of 20 to vec" << std::endl;
+	vec.reserve(20);
 	std::cout << "size : " << vec.size() << "     capacity : " << vec.capacity() << std::endl;
 	std::cout << "---------------------------------------------------" << std::endl;
 	breakFunc();
 	std::cout << "testing element access operators " << std::endl;
 	breakFunc();
-	std::cout << "getting element at index 5 []" << std::endl;
-	std::cout << "vec[5] : " << vec[5] << std::endl;
+	std::cout << "getting element at index 2 []" << std::endl;
+	std::cout << "vec[5] : " << vec[2] << std::endl;
 	std::cout << "---------------------------------------------------" << std::endl;
 	breakFunc();
 	std::cout << "getting element at index 4 using at" << std::endl;
@@ -409,7 +409,7 @@ void vec_tests()
 	std::cout <<  "Its time to test assign insert "<< std::endl;
 	breakFunc();
 	std::cout << "assigning 5 elements index 5 to 10 " <<std::endl;
-	vec.assign(vec.begin() + 5 , vec.begin() + 10);
+	vec.assign(Assignvec.begin() + 5 , Assignvec.begin() + 10);
 	for (it  = vec.begin() ; it != vec.end() ;  it++){
 		std::cout << "["  << *it << "]" ;
 	}
@@ -418,7 +418,7 @@ void vec_tests()
 	std::cout << "---------------------------------------------------" << std::endl;
 	breakFunc();
 	std::cout << "assigning 10 elements of value 1337 to the Assignvec " << std::endl;
-	vec.assign(10,1337);
+	Assignvec.assign(10,1337);
 	for (it  = Assignvec.begin() ; it != Assignvec.end() ;it++){
 		std::cout << "["  << *it << "]" ;
 	}
@@ -527,7 +527,6 @@ void stack_tests()
     st.push(2);
     st.push(3);
 
-	breakFunc();
 	std::cout << "testing if the stack is empty " << std::endl;
 	if (sp.empty())
 		std::cout << "sp is empty" << std::endl;

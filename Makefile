@@ -6,7 +6,7 @@
 #    By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/11 09:01:37 by ybensell          #+#    #+#              #
-#    Updated: 2022/11/14 16:18:13 by ybensell         ###   ########.fr        #
+#    Updated: 2022/11/14 17:02:00 by ybensell         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,7 @@ clean :
 fclean : clean
 	$(RM) $(NAME) $(STL)
 
-stl : 
+stl : $(SRC)
 	$(CC) $(CPPFLAGS) $(STL_SRC) -o $(STL)
 
 re : fclean all
