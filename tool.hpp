@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:38:02 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/13 12:59:04 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/14 09:18:11 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,12 +190,12 @@ namespace ft {
 		public :
 	/*--------------------- Member types definition -------------------------*/
 	
-			typedef          Iterator                        iterator_type ;
-			typedef typename Iterator::iterator_category     iterator_category;
-			typedef typename Iterator::value_type            value_type;
-			typedef typename Iterator::difference_type       difference_type;
-			typedef typename Iterator::pointer               pointer;
-			typedef typename Iterator::reference             reference;
+			typedef          Iterator                      					  iterator_type ;
+			typedef typename iterator_traits<Iterator>::iterator_category     iterator_category;
+			typedef typename iterator_traits<Iterator>::value_type            value_type;
+			typedef typename iterator_traits<Iterator>::difference_type       difference_type;
+			typedef typename iterator_traits<Iterator>::pointer               pointer;
+			typedef typename iterator_traits<Iterator>::reference             reference;
 			
 	/*---------------------------- Constructors -----------------------------*/
 
@@ -203,13 +203,13 @@ namespace ft {
 	
 			explicit reverse_iterator (iterator_type it)
 			{
-				this->_iter = it.getIter();
+				this->_base = it;
 			};
 			
 			template <class Iter>
 			reverse_iterator (const reverse_iterator<Iter>& rev_it)
 			{
-				this->_iter  = rev_it.getIter();
+				this->_base  = rev_it.base();
 			};
 			
 	/*------------------------- Operators Overloads -------------------------*/
@@ -217,30 +217,30 @@ namespace ft {
 			reverse_iterator<iterator_type>& operator = 
 							(const reverse_iterator<iterator_type>& rev_it)
 			{
-				this->_iter = rev_it.getIter();
+				this->_base = rev_it.base();
 				return (*this);
 			};
 			
 			reverse_iterator<iterator_type>& operator +=
 				(const difference_type &index)
-					 {  this->_iter -= index ; return *this; } ;
+					 {  this->_base -= index ; return *this; } ;
 
 			reverse_iterator<iterator_type>& operator -=
 				(const difference_type &index) 
-					 {  this->_iter += index ; return *this; } ; 
+					 {  this->_base += index ; return *this; } ; 
 
 			reverse_iterator<iterator_type>& operator ++
-				  () {  this->_iter-- ; return *this;} ;
+				  () {  this->_base-- ; return *this;} ;
 
 			reverse_iterator<iterator_type>& operator --
-				  () {  this->_iter++ ; return *this;} ;
+				  () {  this->_base++ ; return *this;} ;
 
 
 			reverse_iterator<iterator_type> operator ++(int)
 			{
 				reverse_iterator<iterator_type> tmp = *this;
 
-				this->_iter--;
+				this->_base--;
 				return tmp;
 			};
 
@@ -248,7 +248,7 @@ namespace ft {
 			{
 				reverse_iterator<iterator_type> tmp = *this;
 
-				this->_iter++;
+				this->_base++;
 				return tmp;
 			};
 
@@ -257,7 +257,7 @@ namespace ft {
 			{
 				reverse_iterator<iterator_type> ret;
 
-				ret._iter =  this->_iter - index; 
+				ret._base =  this->_base - index; 
 				return ret;
 			};
 			
@@ -266,19 +266,21 @@ namespace ft {
 			{
 				reverse_iterator<iterator_type> ret;
 
-				ret._iter =  this->_iter + index;
+				ret._base =  this->_base + index;
 				return ret;
 			};
 			
-			reference operator  *()            { return *this->_iter;    };
+			reference operator  *()            { return *this->_base;    };
 			pointer   operator ->()            { return &(operator *()); };
-			reference operator  *()     const  { return *this->_iter;    };
+			reference operator  *()     const  { return *this->_base;    };
 
 
 			reference operator   [](difference_type n) const
-											   {return *(this->_iter - n);};
+											   {return *(this->_base - n);};
  
-			iterator_type base() const         { return this->_iter + 1;};
+			iterator_type base() const         { return this->_base;};
+		private :
+			iterator_type _base;
 	};
 };
 
@@ -288,7 +290,7 @@ namespace ft {
 		bool operator== (const ft::reverse_iterator<Iterator>& lhs,
 						const ft::reverse_iterator<Iterator>& rhs)
 		{
-			if (lhs.getIter() == rhs.getIter())
+			if (lhs.base() == rhs.base())
 					return true;
 				return false;
 		};
@@ -297,7 +299,7 @@ namespace ft {
 		bool operator!= (const ft::reverse_iterator<Iterator>& lhs,
 							const ft::reverse_iterator<Iterator>& rhs)
 		{
-			if (lhs.getIter() != rhs.getIter())
+			if (lhs.base() != rhs.base())
 					return true;
 				return false;
 		};
@@ -306,7 +308,7 @@ namespace ft {
 		bool operator<  (const ft::reverse_iterator<Iterator>& lhs,
 							const ft::reverse_iterator<Iterator>& rhs)
 		{
-			if (lhs.getIter() > rhs.getIter())
+			if (lhs.base() > rhs.base())
 					return true;
 				return false;
 		};
@@ -315,7 +317,7 @@ namespace ft {
 		bool operator<= (const ft::reverse_iterator<Iterator>& lhs,
 							const ft::reverse_iterator<Iterator>& rhs)
 		{
-			if (lhs.getIter() >= rhs.getIter())
+			if (lhs.base() >= rhs.base())
 					return true;
 				return false;
 		};
@@ -324,7 +326,7 @@ namespace ft {
 		bool operator>  (const ft::reverse_iterator<Iterator>& lhs,
 							const ft::reverse_iterator<Iterator>& rhs)
 		{
-			if (lhs.getIter() < rhs.getIter())
+			if (lhs.base() < rhs.base())
 					return true;
 				return false;
 		};
@@ -333,7 +335,7 @@ namespace ft {
 		bool operator>= (const ft::reverse_iterator<Iterator>& lhs,
 							const ft::reverse_iterator<Iterator>& rhs)
 		{
-			if (lhs.getIter() <= rhs.getIter())
+			if (lhs.base() <= rhs.base())
 					return true;
 				return false;
 		};

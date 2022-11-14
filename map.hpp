@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 09:43:12 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/12 13:12:02 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/14 11:41:53 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ namespace ft {
 					insert(first,last);
 				}
 
-			map (const map& x) : _alloc(x._alloc),_comp(x._comp),_tree(_comp,_alloc) 
+			map (const map& x) : _comp(x._comp),_alloc(x._alloc),_tree(_comp,_alloc) 
 			{
 				insert(x.begin(),x.end());
 			}

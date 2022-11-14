@@ -6,7 +6,7 @@
 /*   By: ybensell <ybensell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 10:42:47 by ybensell          #+#    #+#             */
-/*   Updated: 2022/11/13 16:47:34 by ybensell         ###   ########.fr       */
+/*   Updated: 2022/11/14 11:52:02 by ybensell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ namespace ft {
             /************************* Constructors **************************/
             
             explicit vector (const allocator_type & alloc = allocator_type()) 
-                        :_vec_ptr(NULL),_size(0),_capacity(0),_alloc(alloc)
+                        :_vec_ptr(NULL),_alloc(alloc),_size(0),_capacity(0)
                         {  _max_size = _alloc.max_size(); }
 
             explicit vector (size_type n, const value_type& val = value_type(),
@@ -111,7 +111,7 @@ namespace ft {
                 size_type i = 0;
 
                 _size     = x.size();
-                _capacity = x.capacity();
+                _capacity = _size;
                 _max_size = x.max_size();
                 _vec_ptr = _alloc.allocate(_capacity);
                 while (i < _size)
@@ -129,7 +129,7 @@ namespace ft {
                 _alloc.deallocate(_vec_ptr,_capacity);
                 _size     = x._size;
                 if (_capacity < x._capacity)
-                    _capacity = x._capacity;
+                    _capacity = _size;
                 _max_size = x._max_size;
                 _vec_ptr = _alloc.allocate(_capacity);
                 while (i < _size)
@@ -231,14 +231,14 @@ namespace ft {
             reference       at (size_type n)
             {
                 if (n >= _size)
-                    throw std::out_of_range("Out of range");
+                    throw std::out_of_range("vector");
                 reference &tmp = _vec_ptr[n];
                 return tmp;
             }
             const_reference at (size_type n) const
             {
                 if (n >= _size)
-                    throw std::out_of_range("Out of range");
+                    throw std::out_of_range("vector");
                 const_reference &tmp = _vec_ptr[n];
                 return tmp;
             }
@@ -282,13 +282,13 @@ namespace ft {
  
                 diff = last - first;
                 clear();
-                if (diff > _capacity)
+                if (diff > static_cast<difference_type>(_capacity))
                 {
                     _alloc.deallocate(_vec_ptr,_capacity);
                     _capacity = diff;
                    _vec_ptr = _alloc.allocate(_capacity);
                 }
-                if (diff <= _capacity)
+                if (diff <= static_cast<difference_type>(_capacity))
                     _size = diff;
                 for (difference_type i = 0; i < diff; i++)
                 {
@@ -333,9 +333,9 @@ namespace ft {
                 diff = position.getIter() - _vec_ptr ;
                 if (_size + 1 > _capacity)
                     _vec_ptr = _alloc.allocate(_capacity * 2);
-                for (i = _size ; i > diff ; i--)
+                for (i = _size ; static_cast<difference_type>(i) > diff ; i--)
                     _alloc.construct(_vec_ptr + i, tmp[i - 1]);
-                for (i = 0; i < diff ; i++)
+                for (i = 0; static_cast<difference_type>(i) < diff ; i++)
                     _alloc.construct(_vec_ptr + i ,tmp[i]);
                 _alloc.construct(_vec_ptr + i ,val);
                 if (_size + 1  > _capacity)
@@ -369,7 +369,7 @@ namespace ft {
                 }
                 for (i = _size + n - 1; i >= diff + n ; i--)
                     _alloc.construct(_vec_ptr + i ,tmp[i - n]);
-               for (i = 0; i < diff ; i++)
+               for (i = 0; static_cast<difference_type>(i) < diff ; i++)
                     _alloc.construct(_vec_ptr + i ,tmp[i]);
                 while (i < diff + n)
                 {
@@ -405,7 +405,7 @@ namespace ft {
                     difference_type end =  _size - 1 ;
                     for (i = _size  + n - 1 ; end >= diff ; i--,end--)
                         _alloc.construct(_vec_ptr + i , *(_vec_ptr + end));
-                    for (i = 0 ; i < n ; i++,first++)
+                    for (i = 0 ; static_cast<difference_type>(i) < n ; i++,first++)
                         _alloc.construct(_vec_ptr + diff + i,*first);
                     
                 }
@@ -416,9 +416,9 @@ namespace ft {
                     else
                         alloc_nbr = _size + n;
                     _vec_ptr = _alloc.allocate(alloc_nbr);
-                    for (i = 0; i < diff ; i++)
+                    for (i = 0; static_cast<difference_type>(i) < diff ; i++)
                         _alloc.construct(_vec_ptr + i ,tmp[i]);
-                    for (j = 0 ; j < n + 1 ; j++)
+                    for (j = 0 ; static_cast<difference_type>(j) < n + 1 ; j++)
                     {
                         _alloc.construct(_vec_ptr + i + j , *first);
                         first++;
@@ -444,7 +444,7 @@ namespace ft {
 
                 n = position.getIter() - _vec_ptr;
                 _vec_ptr = _alloc.allocate(_capacity);
-                for (i = 0; i < n ; i++)
+                for (i = 0; static_cast<difference_type>(i) < n ; i++)
                     _alloc.construct(_vec_ptr + i,tmp[i]);
                 i++;
                 while (i < _size)
@@ -471,7 +471,7 @@ namespace ft {
                 n = first - _vec_ptr;
                 range = last - first;
                 _vec_ptr = _alloc.allocate(_capacity);
-                for (i = 0 ; i < n ; i++)
+                for (i = 0 ; static_cast<difference_type>(i) < n ; i++)
                     _alloc.construct(_vec_ptr + i,tmp[i]);
                 while (i < range + n)
                     i++;
